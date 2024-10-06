@@ -83,7 +83,7 @@ def new_comment(request, post_id):
 
 @login_required
 def search_results(request):
-    search_text = request.POST.get("search_text", "")
+    search_text = request.POST['search_text']
     users = User.objects.filter(username__icontains=search_text)
     posts = Post.objects.filter(content__icontains=search_text)
     context = {

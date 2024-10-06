@@ -62,7 +62,7 @@
     <div class="main_bottom">
         <form action="{% url 'search_results' %}" method="post">
             {% csrf_token %}
-            <input class="search" type="text" name="q" placeholder="search" required>
+            <input class="search" type="text" name="search_text" placeholder="search" required>
             <button class="success" type="submit">search</button>
         </form>
     </div>
