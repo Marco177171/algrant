@@ -34,11 +34,10 @@
     <div class="divider"></div>
     <h3>latest</h3>
     {% for post in posts %}
-    <div class="card" style="margin-bottom: 16px;">
-        <span>{{ post.created_by }}</span>
+        <div class="divider"></div>
+        <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
         <p>{{ post.content }}</p>
         <a href="{% url 'post_detail' post_id=post.id %}">more</a>
-    </div>
     {% endfor %}
 {% endblock %}
 

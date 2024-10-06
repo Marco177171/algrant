@@ -12,17 +12,11 @@
 <h3>{{user.username}}</h3>
 <h6>{{user.first_name}} {{user.last_name}}</h6>
 <a href="">change username</a>
-<div class="row">
-    {% for post in posts %}
-    <div class="col4">
-        <div class="card">
-            <p>{{ post.created_by }}</p>
-            <p>{{ post.content }}</p>
-            <a href="{% url 'post_detail' post_id=post.id %}">read</a>
-        </div>
-    </div>
-    {% endfor %}
-</div>
+{% for post in posts %}
+    <p>{{ post.created_by }}</p>
+    <p>{{ post.content }}</p>
+    <a href="{% url 'post_detail' post_id=post.id %}">read</a>
+{% endfor %}
 {% endblock %}
 
 {% block overlap %}
