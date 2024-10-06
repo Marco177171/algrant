@@ -1,0 +1,29 @@
+{% extends '../base.html' %}
+
+{% block sidebar %}
+<h6>{{user.username}}</h6>
+<div class="divider"></div>
+<p>---</p>
+{% endblock %}
+
+{% block main %}
+<h6>account management</h6>
+<div class="divider"></div>
+<h3>{{ user.username }}</h3>
+<a href="">change username</a>
+<div class="row">
+    {% for post in posts %}
+    <div class="col4">
+        <div class="card">
+            <p>{{ post.created_by }}</p>
+            <p>{{ post.content }}</p>
+            <a href="{% url 'post_detail' post_id=post.id %}">read</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">index</a>
+{% endblock %}

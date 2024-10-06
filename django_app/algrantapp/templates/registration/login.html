@@ -1,0 +1,28 @@
+{% extends './accounts_base.html' %}
+{% block accounts %}
+<h3>login</h3>
+<div class="divider"></div>
+{% if form.errors %}
+  <p>Wrong username or password. Please try again.</p>
+{% endif %}
+
+{% if next %}
+  {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+  {% else %}
+    <p>Please login to see this page.</p>
+  {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{form.as_table}}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="success" type="submit" style="margin-top: 16px; margin-bottom: 16px;">login</button>
+</form>
+
+{# Assumes you set up the password_reset view in your URLconf #}
+<a href="{% url 'password_reset' %}">Lost password?</a><br>
+<a href="{% url 'password_reset' %}">Reset password</a><br>
+<a href="{% url 'register' %}">Register</a>
+{% endblock %}

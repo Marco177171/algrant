@@ -1,0 +1,12 @@
+{% extends '../registration/accounts_base.html' %}
+
+{% block accounts %}
+<h5>Register</h5>
+<div class="divider"></div>
+<form method="post">
+    {% csrf_token %}
+    {{form.as_table}}
+    <button class="success" type="submit" style="margin-bottom: 16px;">sign up</button>
+</form>
+<a href="{% url 'login' %}">Back to login</a>
+{% endblock %}

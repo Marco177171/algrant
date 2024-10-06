@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/CarbonDesignSystem.css' %}">
+    <title>algrant</title>
+</head>
+<body>
+    <header>
+        <p>algrant</p>
+    </header>
+    <nav>
+        <a href="{% url 'index' %}">index</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" style="float:right">{{user.username}}</a>
+        {% endif %}
+    </nav>
+    <div class="sideBar">
+        <div class="sideBarSub">
+            {% block sidebar %}
+            {% endblock %}
+        </div>
+        <div class="sideBarBottom">
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="danger" type="submit">logout</button>
+            </form>
+            {% endif %}
+            <div class="divider"></div>
+            <h6>studio pulsar</h6>
+            <p>we like it simple</p>
+        </div>
+    </div>
+    <main>
+        {% block main %}
+        {% endblock %}
+        <footer>
+            <div class="row">
+                <div class="col4">
+                    <p>studio pulsar 2024</p>
+                </div>
+                <div class="col4">
+                    <ul>
+                        <li><a href="">link</a></li>
+                        <li><a href="">link</a></li>
+                        <li><a href="">link</a></li>
+                    </ul>
+                </div>
+                <div class="col4">
+                    <ul>
+                        <li><a href="">link</a></li>
+                        <li><a href="">link</a></li>
+                        <li><a href="">link</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <div class="main_bottom">
+        <form action="{% url 'search_results' %}" method="post">
+            {% csrf_token %}
+            <input class="search" type="text" name="q" placeholder="search" required>
+            <button class="success" type="submit">search</button>
+        </form>
+    </div>
+    {% block overlap %}
+    {% endblock %}
+    <div class="explorer">
+        {% block explorer %}
+        {% endblock %}
+    </div>
+</body>
+</html>

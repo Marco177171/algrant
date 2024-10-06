@@ -1,0 +1,33 @@
+{% extends '../base.html' %}
+
+{% block sidebar %}
+<h6>{{user.username}}</h6>
+<div class="divider"></div>
+<p>---</p>
+{% endblock %}
+
+{% block main %}
+<h6>account management</h6>
+<div class="divider"></div>
+<a href="{% url 'user_profile' user=user %}">{{user.username}}</a>
+<h6>{{user.first_name}} {{user.last_name}}</h6>
+<a href="">change username</a>
+<div class="row">
+    {% for post in posts %}
+    <div class="col4">
+        <div class="card">
+            <p>{{ post.created_by }}</p>
+            <p>{{ post.content }}</p>
+            <a href="{% url 'post_detail' post_id=post.id %}">read</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block overlap %}
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">index</a>
+{% endblock %}

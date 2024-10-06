@@ -1,0 +1,40 @@
+{% extends './base.html' %}
+
+{% block sidebar %}
+<h6>{{user.username}}</h6>
+<div class="divider"></div>
+<p>---</p>
+{% endblock %}
+
+{% block main %}
+<h6>algrant search</h6>
+<h3>results for {{search_text}}</h3>
+<div class="divider"></div>
+<h6>users</h6>
+{% if users %}
+    {% for user in users %}
+    <div class="divider"></div>
+    <a href="{% url 'user_profile' user_id=user.id %}">{{user.username}}</a>
+    {% endfor %}
+{% else %}
+    <p>no users found</p>
+{% endif %}
+<div class="divider"></div>
+<h6>posts</h6>
+{% if posts %}
+    {% for post in posts %}
+    <div class="divider"></div>
+    <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{user.username}}</a>
+    <p>{{post.content}}</p>
+    {% endfor %}
+{% else %}
+    <p>no posts found</p>
+{% endif %}
+{% endblock %}
+
+{% block overlap %}
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">index</a>
+{% endblock %}

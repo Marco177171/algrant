@@ -1,0 +1,64 @@
+{% extends './base.html' %}
+
+{% block sidebar %}
+<h6>People You Follow</h6>
+<div class="divider"></div>
+<ul>
+    {% for person in businesses %}
+    <li><a href='{% url "business_model" name=b.name id=b.id %}'>{{b.name}}</a></li>
+    {% endfor %}
+    <a href="#burgerMenu">new business</a>
+</ul>
+{% endblock %}
+
+{% block main %}
+    <h1>Welcome, {{user.username}}</h1>
+    <form action="{% url 'new_post' %}">
+        <input type="text" name="post_content" placeholder="new post..." id="" required>
+        <button class="success" type="submit">submit</button>
+    </form>
+    <div class="row">
+        <div class="col6">
+            <div class="card">
+                <h3>Friends</h3>
+                <button class="success" onclick='location.href="#burgerMenu"'>see your friends</button>
+            </div>
+        </div>
+        <div class="col6">
+            <div class="card">
+                <h3>Profile</h3>
+                <button class="success" onclick='location.href="#burgerMenu"'>go to your profile</button>
+            </div>
+        </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="divider"></div>
+    <h3>latest</h3>
+    {% for post in posts %}
+    <div class="card" style="margin-bottom: 16px;">
+        <span>{{ post.created_by }}</span>
+        <p>{{ post.content }}</p>
+        <a href="{% url 'post_detail' post_id=post.id %}">more</a>
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block overlap %}
+<div class="burgerMenu" id="burgerMenu">
+    <div class="centralMedium">
+        <div class="card">
+            <a href="#burgerMenu:close" style="float:right">cancel</a>
+            <h5>new post</h5>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ new_post.as_table }}
+                <button class="success" id="submit" style="margin-top: 16px;">submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">index</a>
+{% endblock %}

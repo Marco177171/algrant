@@ -1,0 +1,31 @@
+{% extends './base.html' %}
+
+{% block sidebar %}
+<h6>People You Follow</h6>
+<div class="divider"></div>
+<ul>
+    {% for person in businesses %}
+    <li><a href='{% url "business_model" name=b.name id=b.id %}'>{{b.name}}</a></li>
+    {% endfor %}
+    <a href="#burgerMenu">new business</a>
+</ul>
+{% endblock %}
+
+{% block main %}
+    <h3>{{post.created_by}}</h3>
+    <p>{{post.content}}</p>
+    <form action="{ url 'new_comment' post_id=post.id }">
+        <input type="text" name="comment_content" placeholder="leave a comment...">
+        <button class="success" type="submit">comment</button>
+    </form>
+    <div class="divider"></div>
+    <h3>comments</h3>
+    {% for comment in comments %}
+        <h6>{{comment.created_by}}</h6>
+        <p>{{comment.content}}</p>
+    {% endfor %}
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">index</a>
+{% endblock %}

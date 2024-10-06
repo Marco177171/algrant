@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/CarbonDesignSystem.css' %}">
+    <title>Accounts | control vault</title>
+</head>
+<body>
+    <h6>control vault | account management</h6>
+    <div class="centralLarge">
+        <div class="card">
+            {% block accounts %}
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>
