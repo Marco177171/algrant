@@ -13,9 +13,10 @@
 
 {% block main %}
     <h1>Welcome, {{user.username}}</h1>
-    <form action="{% url 'new_post' %}">
-        <input type="text" name="post_content" placeholder="new post..." id="" required>
-        <button class="success" type="submit">submit</button>
+    <form action="{% url 'new_post' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="post_content" placeholder="write here..." required>
+        <button class="success" type="submit">share</button>
     </form>
     <div class="row">
         <div class="col6">

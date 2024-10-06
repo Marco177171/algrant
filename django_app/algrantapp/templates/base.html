@@ -23,15 +23,15 @@
             {% endblock %}
         </div>
         <div class="sideBarBottom">
+            <div class="divider"></div>
+            <h6>studio pulsar</h6>
+            <p>we like it simple</p>
             {% if user.is_authenticated %}
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button class="danger" type="submit">logout</button>
             </form>
             {% endif %}
-            <div class="divider"></div>
-            <h6>studio pulsar</h6>
-            <p>we like it simple</p>
         </div>
     </div>
     <main>

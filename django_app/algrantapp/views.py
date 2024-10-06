@@ -65,25 +65,26 @@ def index(request):
 @login_required
 def new_post(request):
     post_content = request.POST.get("post_content", "")
-    this_post = Post.objects.create(post_content=post_content)
+    this_post = Post.objects.create(content=post_content, created_by=request.user)
     context = {
         'post': this_post,
     }
     return render(request, "post_detail.html", context)
 
 @login_required
-def new_comment(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+def new_comment(request):
     comment_content = request.POST.get("comment_content", "")
-    Comment.objects.create(post=post, content=comment_content)
+    post_id = request.POST.get("post_id", "")
+    post = get_object_or_404(Post, id=post_id)
+    Comment.objects.create(post=post, content=comment_content, created_by=request.user)
     context = {
         'post': post
     }
-    return render(request, "new_post.html", context)
+    return render(request, "post_detail.html", context)
 
 @login_required
 def search_results(request):
-    search_text = request.POST['search_text']
+    search_text = request.POST.get("search_text", "")
     users = User.objects.filter(username__icontains=search_text)
     posts = Post.objects.filter(content__icontains=search_text)
     context = {
