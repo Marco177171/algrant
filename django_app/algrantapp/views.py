@@ -48,6 +48,8 @@ def profile(request):
 @login_required
 def user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    if user==request.user:
+        return redirect(profile)
     users_post = Post.objects.filter(created_by=user).order_by('-id')
     context = {
         'user': user,
@@ -77,10 +79,10 @@ def new_comment(request):
     post_id = request.POST.get("post_id", "")
     post = get_object_or_404(Post, id=post_id)
     Comment.objects.create(post=post, content=comment_content, created_by=request.user)
-    context = {
-        'post': post
-    }
-    return render(request, "post_detail.html", context)
+    # context = {
+    #     'post': post
+    # }
+    return redirect(post_detail, post_id)
 
 @login_required
 def search_results(request):

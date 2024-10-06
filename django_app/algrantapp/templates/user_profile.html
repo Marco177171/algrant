@@ -7,9 +7,9 @@
 {% endblock %}
 
 {% block main %}
-<h6>account management</h6>
+<h6>user profile</h6>
 <div class="divider"></div>
-<a href="{% url 'user_profile' user=user %}">{{user.username}}</a>
+<h3>{{user.username}}</h3>
 <h6>{{user.first_name}} {{user.last_name}}</h6>
 <a href="">change username</a>
 <div class="row">

@@ -12,8 +12,10 @@
 {% endblock %}
 
 {% block main %}
-    <h3>{{post.created_by}}</h3>
+    <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
+    <div class="divider"></div>
     <p>{{post.content}}</p>
+    <div class="spacer"></div>
     <div class="card">
         <form action="{% url 'new_comment' %}" method="post">
             {% csrf_token %}
@@ -25,7 +27,8 @@
     <div class="divider"></div>
     <h3>comments</h3>
     {% for comment in comments %}
-        <h6>{{comment.created_by}}</h6>
+        <div class="divider"></div>
+        <a href="{% url 'user_profile' user_id=comment.created_by.id %}">{{comment.created_by}}</a>
         <p>{{comment.content}}</p>
     {% endfor %}
 {% endblock %}
