@@ -7,7 +7,6 @@ from .models import *
 from .forms import *
 from django.db.models import Q
 
-
 # Account Management
 
 def register(request):
