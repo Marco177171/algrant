@@ -33,7 +33,9 @@ def register(request):
             user = form.save()
             login(request, user)
             return redirect("profile")
-        
+        else:
+            return redirect("register")
+
 @login_required
 def user_logout(request):
     logout(request)
