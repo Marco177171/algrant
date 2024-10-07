@@ -13,6 +13,7 @@
 
 {% block main %}
     <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
+    <span>{{post.date_time}}</span>
     <div class="divider"></div>
     <p>{{post.content}}</p>
     <div class="spacer"></div>
@@ -29,6 +30,7 @@
     {% for comment in comments %}
         <div class="divider"></div>
         <a href="{% url 'user_profile' user_id=comment.created_by.id %}">{{comment.created_by}}</a>
+        <span>{{comment.date_time}}</span>
         <p>{{comment.content}}</p>
     {% endfor %}
 {% endblock %}

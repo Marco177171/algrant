@@ -30,12 +30,11 @@
             </div>
         </div>
     </div>
-    <div class="spacer"></div>
-    <div class="divider"></div>
-    <h3>latest</h3>
+    <h3>latest posts</h3>
     {% for post in posts %}
         <div class="divider"></div>
         <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
+        <span>{{post.date_time}}</span>
         <p>{{ post.content }}</p>
         <a href="{% url 'post_detail' post_id=post.id %}">more</a>
     {% endfor %}

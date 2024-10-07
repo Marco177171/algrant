@@ -17,3 +17,7 @@ class Comment (models.Model):
     content = models.TextField(max_length=512)
     def __str__(self):
         return self.content
+
+class Friendship (models.Model):
+    requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    
