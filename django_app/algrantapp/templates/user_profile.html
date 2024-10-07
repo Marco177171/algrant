@@ -9,6 +9,11 @@
 {% block main %}
 <h6>user profile</h6>
 <div class="divider"></div>
+{% if is_friend %}
+    <p>friendship accepted</p>
+{% else %}
+    <p>not a friend</p>
+{% endif %}
 <h3>{{user.username}}</h3>
 <h6>{{user.first_name}} {{user.last_name}}</h6>
 <a href="">change username</a>

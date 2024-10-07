@@ -5,9 +5,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
+from django.db.models import Q
 
 
-# Create your views here.
+# Account Management
 
 def register(request):
     if request.method == "GET":
@@ -17,17 +18,17 @@ def register(request):
         )
     elif request.method == "POST":
         form = CustomUserCreationForm(request.POST)
-        def clean(self):
-            cleaned_data = super(CustomUserCreationForm, self).clean()
-            username = cleaned_data.get("username")
-            email = cleaned_data.get("email")
-            usernamed = User.objects.filter(username=username)
-            emailed = User.objects.filter(email=email)
-            if usernamed:
-                raise forms.ValidationError("That username is already taken. Please select another")
-            if emailed:
-                raise forms.ValidationError("An account using that email already exists")
-            return cleaned_data
+        # def clean(self):
+        #     cleaned_data = super(CustomUserCreationForm, self).clean()
+        #     username = cleaned_data.get("username")
+        #     email = cleaned_data.get("email")
+        #     usernamed = User.objects.filter(username=username)
+        #     emailed = User.objects.filter(email=email)
+        #     if usernamed:
+        #         raise forms.ValidationError("That username is already taken. Please select another")
+        #     if emailed:
+        #         raise forms.ValidationError("An account using that email already exists")
+        #     return cleaned_data
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -50,12 +51,22 @@ def user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if user==request.user:
         return redirect(profile)
+    is_friend=False
+    friendship = get_object_or_404(Friendship,
+        Q(from_user_id=request.user.id, to_user_id=user.id) | 
+        Q(to_user_id=request.user.id, from_user_id=user.id)
+    )
+    if (friendship):
+        is_friend=True
     users_post = Post.objects.filter(created_by=user).order_by('-id')
     context = {
+        'is_friend': is_friend,
         'user': user,
         'posts': users_post,
     }
     return render(request, 'user_profile.html', context)
+
+# index and posts
 
 @login_required
 def index(request):
@@ -63,6 +74,8 @@ def index(request):
         'posts': Post.objects.order_by('-id'),
     }
     return render(request, "index.html", context)
+
+# post management
 
 @login_required
 def new_post(request):
@@ -74,15 +87,34 @@ def new_post(request):
     return render(request, "post_detail.html", context)
 
 @login_required
+def delete_post(post_id):
+    Post.objects.delete(id=post_id)
+    context = {
+        'message': 'The post and all related comments were successfully erased',
+    }
+    return redirect("message.html", context)
+
+@login_required
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comments = Comment.objects.filter(post=post)
+    context = {
+        'post': post,
+        'comments': comments
+    }
+    return render(request, "post_detail.html", context)
+
+# comment management
+
+@login_required
 def new_comment(request):
     comment_content = request.POST.get("comment_content", "")
     post_id = request.POST.get("post_id", "")
     post = get_object_or_404(Post, id=post_id)
     Comment.objects.create(post=post, content=comment_content, created_by=request.user)
-    # context = {
-    #     'post': post
-    # }
     return redirect(post_detail, post_id)
+
+# search engine
 
 @login_required
 def search_results(request):
@@ -96,12 +128,11 @@ def search_results(request):
     }
     return render(request, "search_results.html", context)
 
+# user interface
+
 @login_required
-def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    comments = Comment.objects.filter(post=post)
+def message(request, message):
     context = {
-        'post': post,
-        'comments': comments
+        'message': message
     }
-    return render(request, "post_detail.html", context)
+    return render(request, "message.html", context)

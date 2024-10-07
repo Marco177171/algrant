@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -19,5 +20,8 @@ class Comment (models.Model):
         return self.content
 
 class Friendship (models.Model):
-    requested_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    
+    from_user_id = models.IntegerField()
+    to_user_id = models.IntegerField()
+    is_active = models.BooleanField(default=False)
+    def __str__(self):
+        return self.from_user_id + self.to_user_id

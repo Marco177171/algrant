@@ -20,12 +20,17 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    # ACCOUNT MANAGEMENT
     path('profile', views.profile, name='profile'),
     path('user_profile/<int:user_id>', views.user_profile, name='user_profile'),
     path('register', views.register, name='register'),
+    # POSTING
     path('new_post', views.new_post, name='new_post'),
-    # path('delete_post', views.delete_post, name='delete_post'),
     path('post_detail/<int:post_id>', views.post_detail, name='post_detail'),
+    path('delete_post', views.delete_post, name='delete_post'),
+    # COMMENTING
     path('new_comment', views.new_comment, name='new_comment'),
-    path('search_results', views.search_results, name='search_results')
+    path('search_results', views.search_results, name='search_results'),
+    # USER INTERFACE
+    path('message', views.message, name='message'),
 ]
