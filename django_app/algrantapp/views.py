@@ -54,7 +54,7 @@ def user_profile(request, user_id):
     if user==request.user:
         return redirect(profile)
     is_friend=False
-    friendship = get_object_or_404(Friendship,
+    friendship = Friendship.objects.filter(
         Q(from_user_id=request.user.id, to_user_id=user.id) | 
         Q(to_user_id=request.user.id, from_user_id=user.id)
     )
