@@ -1,19 +1,4 @@
 services:
-  algrant_postgres:
-    container_name: algrant_postgres
-    image: postgres:latest
-    env_file:
-      - .env
-    environment:
-      - algrant=value
-    ports:
-      - ${POSTGRES_PORT}:5432
-    volumes:
-      - algrant_postgres_volume:/var/lib/postgresql/data
-    networks:
-      - algrantNet  # Add this line to connect the database container to the network
-    restart: always
-
   algrant_django:
     container_name: algrant_django
     build: ./django_app
@@ -27,6 +12,3 @@ services:
 
 networks:
   algrantNet:
-
-volumes:
-  algrant_postgres_volume:
