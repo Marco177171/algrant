@@ -1,16 +1,5 @@
 {% extends './base.html' %}
 
-{% block sidebar %}
-<h6>People You Follow</h6>
-<div class="divider"></div>
-<ul>
-    {% for person in businesses %}
-    <li><a href='{% url "business_model" name=b.name id=b.id %}'>{{b.name}}</a></li>
-    {% endfor %}
-    <a href="#burgerMenu">new business</a>
-</ul>
-{% endblock %}
-
 {% block main %}
     <h1>Welcome, {{user.username}}</h1>
     <div class="row">

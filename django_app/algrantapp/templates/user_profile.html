@@ -1,11 +1,5 @@
 {% extends './base.html' %}
 
-{% block sidebar %}
-<h6>{{user.username}}</h6>
-<div class="divider"></div>
-<p>---</p>
-{% endblock %}
-
 {% block main %}
 <h6>user profile</h6>
 <div class="divider"></div>
@@ -16,7 +10,6 @@
 {% endif %}
 <h3>{{user.username}}</h3>
 <h6>{{user.first_name}} {{user.last_name}}</h6>
-<a href="">change username</a>
 {% for post in posts %}
     <p>{{ post.created_by }}</p>
     <p>{{ post.content }}</p>

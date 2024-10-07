@@ -57,7 +57,7 @@ def user_profile(request, user_id):
         Q(to_user_id=request.user.id, from_user_id=user.id)
     ).first()
     is_friend=False
-    if (friendship):
+    if (friendship and friendship.is_active):
         is_friend=True
     users_post = Post.objects.filter(created_by=user).order_by('-id')
     context = {
@@ -71,8 +71,10 @@ def user_profile(request, user_id):
 
 @login_required
 def index(request):
+    posts=Post.objects.order_by('-id')
     context = {
-        'posts': Post.objects.order_by('-id'),
+        'posts': posts,
+        'posts_amount': len(posts),
     }
     return render(request, "index.html", context)
 
@@ -130,6 +132,19 @@ def search_results(request):
     return render(request, "search_results.html", context)
 
 # user interface
+
+@login_required
+def base(request):
+    friendships = Friendship.objects.filter(
+        Q(from_user_id=request.user.id)
+        | Q(to_user_id=request.user.id)
+        & Q(is_active=True)
+    )
+    context = {
+        # 'posts': User.objects.filter(created_by=request.user).order_by('-id'),
+        'people_amount': len(friendships),
+    }
+    return render(request, 'users/profile.html', context)
 
 @login_required
 def message(request, message):
