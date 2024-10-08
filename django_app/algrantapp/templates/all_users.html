@@ -1,0 +1,28 @@
+{% extends './base.html' %}
+
+{% block sidebar %}
+    {% if my_friends_list %}
+    <ul>
+        {% for friend in my_friends_list %}
+        <li>
+            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>no friends yet</p>
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+<h3>All algrant users</h3>
+{% if all_users %}
+    {% for this_user in all_users %}
+    <a href="{% url 'user_profile' user_id=this_user.id %}">{{this_user.username}}</a>
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">index</a>
+{% endblock %}
