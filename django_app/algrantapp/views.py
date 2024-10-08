@@ -30,6 +30,11 @@ def user_logout(request):
     return redirect("login")
 
 @login_required
+def user_password_change(request):
+    password_change(request)
+    return redirect("password_change")
+
+@login_required
 def profile(request):
     my_friends_list=get_my_friends(request)
     context = {

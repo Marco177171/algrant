@@ -24,6 +24,7 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('user_profile/<int:user_id>', views.user_profile, name='user_profile'),
     path('register', views.register, name='register'),
+    path('user_logout', views.user_logout, name='user_logout'),
     # POSTING
     path('new_post', views.new_post, name='new_post'),
     path('post_detail/<int:post_id>', views.post_detail, name='post_detail'),
