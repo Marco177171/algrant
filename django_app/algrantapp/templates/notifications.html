@@ -1,5 +1,19 @@
 {% extends './base.html' %}
 
+{% block sidebar %}
+    {% if my_friends_list %}
+    <ul>
+        {% for friend in my_friends_list %}
+        <li>
+            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>no friends yet</p>
+    {% endif %}
+{% endblock %}
+
 {% block main %}
     <h6>notifications</h6>
     <div class="divider"></div>
@@ -7,16 +21,16 @@
     {% if friendship_requests %}
         {% for request in friendship_requests %}
             <a href="{% url 'user_profile' user_id=request.from_user_id %}">{{request.from_user_id}}</a>
-            <form action="">
+            <form action="{% url 'accept_friendship_request' friendship_request_id=request.id %}">
                 <button class="success" type="submit">accept</button>
             </form>
         {% endfor %}
     {% else %}
         <p>there are no new friendship requests</p>
     {% endif %}
+    <div class="divider"></div>
     <h3>comments</h3>
     {% for comment in received_comments %}
-        <div class="divider"></div>
         <h6>you received a comment</h6>
         <a href="{% url 'user_profile' comment.created_by.id %}">{{comment.created_by.username}}</a>
         <p>{{comment.content}}</p>

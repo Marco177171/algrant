@@ -1,5 +1,19 @@
 {% extends './base.html' %}
 
+{% block sidebar %}
+    {% if my_friends_list %}
+    <ul>
+        {% for friend in my_friends_list %}
+        <li>
+            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>no friends yet</p>
+    {% endif %}
+{% endblock %}
+
 {% block main %}
     <h6>{{posts_amount}} posts published</h6>
     <div class="card">

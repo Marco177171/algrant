@@ -20,10 +20,6 @@
     </nav>
     <div class="sideBar">
         <p>people</p>
-        <h6>{{people_amount}}</h6>
-        {% for person in people %}
-            <a href="{% url 'user_profile' user_id=user.id %}">{{person.username}}</a>
-        {% endfor %}
         <div class="sideBarSub">
             {% block sidebar %}
             {% endblock %}
