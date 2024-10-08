@@ -19,15 +19,27 @@
     <div class="divider"></div>
     <h3>{{this_user.username}}</h3>
     <h6>{{this_user.first_name}} {{this_user.last_name}}</h6>
-{% if is_friend %}
+{% if friendship and friendship.is_active %}
     <p>friendship accepted</p>
     <div style="display:flex">
-        <button class="warning" style="margin-right: 4px;">block</button>
-        <button class="danger" style="margin-left: 4px;">remove</button>
+        <form action="{% url 'block_user' user_to_block_id=this_user.id %}">
+            {% csrf_token %}
+            <button class="warning" style="margin-right: 4px;" type="submit">block</button>
+        </form>
+        <form action="{% url 'delete_friendship' to_user_id=this_user.id %}">
+            {% csrf_token %}
+            <button class="danger" style="margin-left: 4px;">remove</button>
+        </form>
     </div>
+{% elif friendship and not friendship.is_active %}
+    <p>friendship request pending</p>
+    <form action="{% url 'delete_friendship' to_user_id=this_user.id %}">
+        {% csrf_token %}
+        <button class="warning" style="margin-left: 4px;">withdraw</button>
+    </form>
 {% else %}
     <p>not a friend</p>
-    <form action="{% url 'send_friendship_request' %}" method="post">
+    <form action="{% url 'send_friendship_request' to_user_id=this_user.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="to_user_id" value="{{user.id}}">
         <button class="success" type="submit">send request</button>
@@ -37,7 +49,7 @@
     <h5>latest by {{this_user.username}}</h5>
 {% for post in posts %}
     <div class="divider"></div>
-    <p>written by {{ post.created_by }} on {{post.date_time}}</p>
+    <span>written by {{ post.created_by }} on {{post.date_time}}</span>
     <p>{{ post.content }}</p>
     <a href="{% url 'post_detail' post_id=post.id %}">Read</a>
 {% endfor %}
