@@ -24,3 +24,8 @@ class Friendship (models.Model):
     is_active = models.BooleanField(default=False)
     def __str__(self):
         return str(self.from_user_id) + str(self.to_user_id)
+    
+class Notification (models.Model):
+    content = models.CharField(max_length=256)
+    def __str__(self):
+        return self.content

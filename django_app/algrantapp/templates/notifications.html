@@ -1,0 +1,29 @@
+{% extends './base.html' %}
+
+{% block main %}
+    <h6>notifications</h6>
+    <div class="divider"></div>
+    <h3>friendship requests</h3>
+    {% if friendship_requests %}
+        {% for request in friendship_requests %}
+            <a href="{% url 'user_profile' user_id=request.from_user_id %}">{{request.from_user_id}}</a>
+            <form action="">
+                <button class="success" type="submit">accept</button>
+            </form>
+        {% endfor %}
+    {% else %}
+        <p>there are no new friendship requests</p>
+    {% endif %}
+    <h3>comments</h3>
+    {% for comment in received_comments %}
+        <div class="divider"></div>
+        <h6>you received a comment</h6>
+        <a href="{% url 'user_profile' comment.created_by.id %}">{{comment.created_by.username}}</a>
+        <p>{{comment.content}}</p>
+        <a href="{% url 'post_detail' comment.post.id %}">see post</a>
+    {% endfor %}
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">index</a>
+{% endblock %}

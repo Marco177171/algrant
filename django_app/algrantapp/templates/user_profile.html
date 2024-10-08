@@ -19,8 +19,7 @@
 <h5>latest by {{user.username}}</h5>
 {% for post in posts %}
     <div class="divider"></div>
-    <p>{{ post.created_by }}</p>
-    <span>{{post.date_time}}</span>
+    <p>written by {{ post.created_by }} on {{post.date_time}}</p>
     <p>{{ post.content }}</p>
     <a href="{% url 'post_detail' post_id=post.id %}">read</a>
 {% endfor %}

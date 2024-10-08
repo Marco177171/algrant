@@ -34,6 +34,8 @@ urlpatterns = [
     path('search_results', views.search_results, name='search_results'),
     # FRIENDSHIP MANAGEMENT
     path('send_friendship_request', views.send_friendship_request, name='send_friendship_request'),
+    # NOTIFICATIONS
+    path('notifications', views.notifications, name='notifications'),
     # USER INTERFACE
     path('message', views.message, name='message'),
 ]
