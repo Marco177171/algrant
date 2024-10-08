@@ -140,15 +140,41 @@ def base(request):
         | Q(to_user_id=request.user.id)
         & Q(is_active=True)
     )
+    friend_id_list=[]
+    for friendship in friendships:
+        if friendship.to_user_id != request.user.id:
+            friend_id_list.append(friendship.to_user_id)
+        else:
+            friend_id_list.append(friendship.from_user_id)
+    people = User.objects.filter(id=friend_id_list)
     context = {
-        # 'posts': User.objects.filter(created_by=request.user).order_by('-id'),
-        'people_amount': len(friendships),
+        'people_amount': len(people),
+        'people': people,
     }
     return render(request, 'users/profile.html', context)
 
 @login_required
 def message(request, message):
     context = {
-        'message': message
+        'message': message,
     }
     return render(request, "message.html", context)
+
+# friendship management
+
+def send_friendship_request(request):
+    my_id = request.user.id
+    to_user_id = request.POST.get('to_user_id', '')
+    print('request from ' + str(my_id) + ' to ' + str(to_user_id))
+    Friendship.objects.create(from_user_id=my_id, to_user_id=to_user_id)
+    context = {
+        'message': 'your friendship request was sent'
+    }
+    return render(request, "message.html", context)
+
+def remove_friendship_request(request, friendship_request_id):
+    Friendship.objects.delete(id=friendship_request_id)
+    context = {
+        'message': 'your request was deleted'
+    }
+    return render(request, 'message.html', context)

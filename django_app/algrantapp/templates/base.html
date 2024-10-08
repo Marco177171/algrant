@@ -19,7 +19,10 @@
     </nav>
     <div class="sideBar">
         <p>people</p>
-        {{people_amount}}
+        <h6>{{people_amount}}</h6>
+        {% for person in people %}
+            <a href="{% url 'user_profile' user_id=user.id %}">{{person.username}}</a>
+        {% endfor %}
         <div class="sideBarSub">
             {% block sidebar %}
             {% endblock %}
@@ -39,7 +42,7 @@
     <main>
         {% block main %}
         {% endblock %}
-        <footer>
+        <!-- <footer>
             <div class="row">
                 <div class="col4">
                     <p>studio pulsar 2024</p>
@@ -59,7 +62,7 @@
                     </ul>
                 </div>
             </div>
-        </footer>
+        </footer> -->
     </main>
     <div class="main_bottom">
         <form action="{% url 'search_results' %}" method="post">

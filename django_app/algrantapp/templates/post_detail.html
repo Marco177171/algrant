@@ -4,7 +4,7 @@
     <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
     <span>{{post.date_time}}</span>
     <div class="divider"></div>
-    <p>{{post.content}}</p>
+    <h5>{{post.content}}</h5>
     <div class="spacer"></div>
     <div class="card">
         <form action="{% url 'new_comment' %}" method="post">
