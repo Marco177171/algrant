@@ -35,7 +35,7 @@
             <h6>you received a comment</h6>
             <a href="{% url 'user_profile' comment.created_by.id %}">{{comment.created_by.username}}</a>
             <p>{{comment.content}}</p>
-            <a href="{% url 'post_detail' comment.post.id %}">see post</a>
+            <a href="{% url 'post_detail' comment.post.id %}">See post</a>
         {% endfor %}
     {% else %}
         <p>there are no new comments</p>
@@ -43,5 +43,5 @@
 {% endblock %}
 
 {% block explorer %}
-<a href="{% url 'index' %}">index</a>
+<a href="{% url 'index' %}">Index</a>
 {% endblock %}

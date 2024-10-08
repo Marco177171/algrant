@@ -35,7 +35,7 @@
     <div class="divider"></div>
     <p>written by {{ post.created_by }} on {{post.date_time}}</p>
     <p>{{ post.content }}</p>
-    <a href="{% url 'post_detail' post_id=post.id %}">read</a>
+    <a href="{% url 'post_detail' post_id=post.id %}">Read</a>
 {% endfor %}
 {% endblock %}
 
@@ -43,5 +43,5 @@
 {% endblock %}
 
 {% block explorer %}
-<a href="{% url 'index' %}">index</a>
+<a href="{% url 'index' %}">Index</a>
 {% endblock %}
