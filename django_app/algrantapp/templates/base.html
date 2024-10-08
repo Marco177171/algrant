@@ -3,8 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-    <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/CarbonDesignSystem.css' %}">
     <title>algrant</title>
 </head>
@@ -27,14 +26,8 @@
         </div>
         <div class="sideBarBottom">
             <div class="divider"></div>
-            <h6>studio pulsar</h6>
+            <a href="https://studiopulsar.pro">Studio Pulsar</a>
             <p>we like it simple</p>
-            {% if user.is_authenticated %}
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="danger" type="submit">logout</button>
-            </form>
-            {% endif %}
         </div>
     </div>
     <main>
