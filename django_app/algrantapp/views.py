@@ -40,22 +40,22 @@ def profile(request):
 
 @login_required
 def user_profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    if user==request.user:
+    this_user = get_object_or_404(User, id=user_id)
+    if this_user==request.user:
         return redirect(profile)
     friendship = Friendship.objects.filter(
-        Q(from_user_id=request.user.id, to_user_id=user.id) |
-        Q(to_user_id=request.user.id, from_user_id=user.id)
+        Q(from_user_id=request.user.id, to_user_id=this_user.id) |
+        Q(to_user_id=request.user.id, from_user_id=this_user.id)
     ).first()
     is_friend=False
     if (friendship and friendship.is_active):
         is_friend=True
-    users_post = Post.objects.filter(created_by=user).order_by('-id')
+    users_post = Post.objects.filter(created_by=this_user).order_by('-id')
     my_friends_list=get_my_friends(request)
     context = {
         'my_friends_list':my_friends_list,
         'is_friend': is_friend,
-        'user': user,
+        'this_user': this_user,
         'posts': users_post,
     }
     return render(request, 'user_profile.html', context)
@@ -123,13 +123,13 @@ def new_comment(request):
 @login_required
 def search_results(request):
     search_text = request.POST.get("search_text", "")
-    users = User.objects.filter(username__icontains=search_text)
+    found_users = User.objects.filter(username__icontains=search_text)
     posts = Post.objects.filter(content__icontains=search_text)
     my_friends_list=get_my_friends(request)
     context = {
         'my_friends_list':my_friends_list,
         'search_text': search_text,
-        'users': users,
+        'found_users': found_users,
         'posts': posts
     }
     return render(request, "search_results.html", context)
@@ -170,7 +170,6 @@ def send_friendship_request(request):
     print('request from ' + str(my_id) + ' to ' + str(to_user_id))
     Friendship.objects.create(from_user_id=my_id, to_user_id=to_user_id)
     context = {
-        'my_friends_list':my_friends_list,
         'message': 'your friendship request was sent'
     }
     return render(request, "message.html", context)
