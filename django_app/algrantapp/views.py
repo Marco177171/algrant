@@ -162,6 +162,7 @@ def message(request, message):
 
 # friendship management
 
+@login_required
 def send_friendship_request(request):
     my_id = request.user.id
     to_user_id = request.POST.get('to_user_id', '')
@@ -172,9 +173,26 @@ def send_friendship_request(request):
     }
     return render(request, "message.html", context)
 
+@login_required
 def remove_friendship_request(request, friendship_request_id):
     Friendship.objects.delete(id=friendship_request_id)
     context = {
         'message': 'your request was deleted'
     }
     return render(request, 'message.html', context)
+
+@login_required
+def notifications(request):
+    friendship_requests = Friendship.objects.filter(
+        is_active=False,
+        to_user_id=request.user.id,
+    )
+    received_comments = Comment.objects.filter(
+        ~Q(created_by=request.user),
+        post__created_by=request.user
+    )
+    context = {
+        'friendship_requests': friendship_requests,
+        'received_comments': received_comments,
+    }
+    return render(request, 'notifications.html', context)
