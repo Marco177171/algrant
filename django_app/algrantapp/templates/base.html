@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="minimal-ui, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="{% static 'css/CarbonDesignSystem.css' %}">
     <title>algrant</title>
 </head>
@@ -12,14 +13,14 @@
         <p>algrant</p>
     </header>
     <nav>
-        <a href="{% url 'index' %}">index</a>
+        <a href="{% url 'index' %}">Index</a>
         {% if user.is_authenticated %}
         <a href="{% url 'profile' %}" style="float:right">{{user.username}}</a>
-        <a href="{% url 'notifications' %}" style="float:right">notifications</a>
+        <a href="{% url 'notifications' %}" style="float:right">Notifications</a>
         {% endif %}
     </nav>
     <div class="sideBar">
-        <p>people | <a href="{% url 'all_users' %}">see all</a></p>
+        <p>people | <a href="{% url 'all_users' %}">See all</a></p>
         <div class="sideBarSub">
             {% block sidebar %}
             {% endblock %}

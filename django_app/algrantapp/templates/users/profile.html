@@ -18,16 +18,17 @@
 <h6>account management</h6>
 <div class="divider"></div>
 <h3>{{ user.username }}</h3>
-<a href="">change username</a>
+<a href="{% url 'logout' %}">Logout</a>
+<a href="{% url 'password_change' %}">Change password</a>
 {% for post in posts %}
     <div class="divider"></div>
     <span>{{post.date_time}}</span>
     <p>{{ post.content }}</p>
-    <a href="{% url 'post_detail' post_id=post.id %}">learn more</a>
+    <a href="{% url 'post_detail' post_id=post.id %}">Learn more</a>
 {% endfor %}
 </div>
 {% endblock %}
 
 {% block explorer %}
-<a href="{% url 'index' %}">index</a>
+<a href="{% url 'index' %}">Index</a>
 {% endblock %}

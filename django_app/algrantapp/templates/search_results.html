@@ -33,7 +33,7 @@
     <div class="divider"></div>
     <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
     <p>{{post.content}}</p>
-    <a href="{% url 'post_detail' post_id=post.id %}">learn more</a>
+    <a href="{% url 'post_detail' post_id=post.id %}">Learn more</a>
     {% endfor %}
 {% else %}
     <p>no posts found</p>
@@ -44,5 +44,5 @@
 {% endblock %}
 
 {% block explorer %}
-<a href="{% url 'index' %}">index</a>
+<a href="{% url 'index' %}">Index</a>
 {% endblock %}
