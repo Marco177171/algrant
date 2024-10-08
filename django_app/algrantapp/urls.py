@@ -32,6 +32,7 @@ urlpatterns = [
     path('new_comment', views.new_comment, name='new_comment'),
     path('search_results', views.search_results, name='search_results'),
     # FRIENDSHIP MANAGEMENT
+    path('all_users', views.all_users, name='all_users'),
     path('send_friendship_request', views.send_friendship_request, name='send_friendship_request'),
     path('accept_friendship_request/<int:friendship_request_id>', views.accept_friendship_request, name='accept_friendship_request'),
     # NOTIFICATIONS

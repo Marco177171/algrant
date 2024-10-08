@@ -190,6 +190,16 @@ def accept_friendship_request(request, friendship_request_id):
     return render(request, "message.html", context)
 
 @login_required
+def all_users(request):
+    all_users = User.objects.all()
+    my_friends_list=get_my_friends(request)
+    context = {
+        'my_friends_list':my_friends_list,
+        'all_users': all_users
+    }
+    return render(request, 'all_users.html', context)
+
+@login_required
 def remove_friendship_request(request, friendship_request_id):
     Friendship.objects.delete(id=friendship_request_id)
     context = {
