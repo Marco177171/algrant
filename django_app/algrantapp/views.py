@@ -123,13 +123,13 @@ def new_comment(request):
 @login_required
 def search_results(request):
     search_text = request.POST.get("search_text", "")
-    users = User.objects.filter(username__icontains=search_text)
+    found_users = User.objects.filter(username__icontains=search_text)
     posts = Post.objects.filter(content__icontains=search_text)
     my_friends_list=get_my_friends(request)
     context = {
         'my_friends_list':my_friends_list,
         'search_text': search_text,
-        'users': users,
+        'found_users': found_users,
         'posts': posts
     }
     return render(request, "search_results.html", context)

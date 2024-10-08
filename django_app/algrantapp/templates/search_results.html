@@ -19,9 +19,9 @@
 <h3>results for "{{search_text}}"</h3>
 <div class="divider"></div>
 <h4>users</h4>
-{% if users %}
-    {% for user in users %}
-    <a href="{% url 'user_profile' user_id=user.id %}">{{user.username}}</a>
+{% if found_users %}
+    {% for found_user in found_users %}
+    <a href="{% url 'user_profile' user_id=found_user.id %}">{{found_user.username}}</a>
     {% endfor %}
 {% else %}
     <p>no users found</p>
@@ -31,7 +31,7 @@
 {% if posts %}
     {% for post in posts %}
     <div class="divider"></div>
-    <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{user.username}}</a>
+    <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
     <p>{{post.content}}</p>
     <a href="{% url 'post_detail' post_id=post.id %}">learn more</a>
     {% endfor %}
