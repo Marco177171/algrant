@@ -20,7 +20,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('base', views.base, name='base'),
     # ACCOUNT MANAGEMENT
     path('profile', views.profile, name='profile'),
     path('user_profile/<int:user_id>', views.user_profile, name='user_profile'),
@@ -34,6 +33,7 @@ urlpatterns = [
     path('search_results', views.search_results, name='search_results'),
     # FRIENDSHIP MANAGEMENT
     path('send_friendship_request', views.send_friendship_request, name='send_friendship_request'),
+    path('accept_friendship_request/<int:friendship_request_id>', views.accept_friendship_request, name='accept_friendship_request'),
     # NOTIFICATIONS
     path('notifications', views.notifications, name='notifications'),
     # USER INTERFACE

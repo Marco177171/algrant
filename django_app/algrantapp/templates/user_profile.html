@@ -1,10 +1,24 @@
 {% extends './base.html' %}
 
+{% block sidebar %}
+    {% if my_friends_list %}
+    <ul>
+        {% for friend in my_friends_list %}
+        <li>
+            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>no friends yet</p>
+    {% endif %}
+{% endblock %}
+
 {% block main %}
-<h6>user profile</h6>
-<div class="divider"></div>
-<h3>{{user.username}}</h3>
-<h6>{{user.first_name}} {{user.last_name}}</h6>
+    <h6>user profile</h6>
+    <div class="divider"></div>
+    <h3>{{user.username}}</h3>
+    <h6>{{user.first_name}} {{user.last_name}}</h6>
 {% if is_friend %}
     <p>friendship accepted</p>
 {% else %}
@@ -15,8 +29,8 @@
         <button class="success" type="submit">send request</button>
     </form>
 {% endif %}
-<div class="divider"></div>
-<h5>latest by {{user.username}}</h5>
+    <div class="divider"></div>
+    <h5>latest by {{user.username}}</h5>
 {% for post in posts %}
     <div class="divider"></div>
     <p>written by {{ post.created_by }} on {{post.date_time}}</p>

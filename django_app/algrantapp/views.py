@@ -17,17 +17,6 @@ def register(request):
         )
     elif request.method == "POST":
         form = CustomUserCreationForm(request.POST)
-        # def clean(self):
-        #     cleaned_data = super(CustomUserCreationForm, self).clean()
-        #     username = cleaned_data.get("username")
-        #     email = cleaned_data.get("email")
-        #     usernamed = User.objects.filter(username=username)
-        #     emailed = User.objects.filter(email=email)
-        #     if usernamed:
-        #         raise forms.ValidationError("That username is already taken. Please select another")
-        #     if emailed:
-        #         raise forms.ValidationError("An account using that email already exists")
-        #     return cleaned_data
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -42,7 +31,9 @@ def user_logout(request):
 
 @login_required
 def profile(request):
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'posts':Post.objects.filter(created_by=request.user).order_by('-id')
     }
     return render(request, 'users/profile.html', context)
@@ -60,7 +51,9 @@ def user_profile(request, user_id):
     if (friendship and friendship.is_active):
         is_friend=True
     users_post = Post.objects.filter(created_by=user).order_by('-id')
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'is_friend': is_friend,
         'user': user,
         'posts': users_post,
@@ -72,7 +65,9 @@ def user_profile(request, user_id):
 @login_required
 def index(request):
     posts=Post.objects.order_by('-id')
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'posts': posts,
         'posts_amount': len(posts),
     }
@@ -84,7 +79,9 @@ def index(request):
 def new_post(request):
     post_content = request.POST.get("post_content", "")
     this_post = Post.objects.create(content=post_content, created_by=request.user)
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'post': this_post,
     }
     return render(request, "post_detail.html", context)
@@ -92,7 +89,9 @@ def new_post(request):
 @login_required
 def delete_post(post_id):
     Post.objects.delete(id=post_id)
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'message': 'The post and all related comments were successfully erased',
     }
     return redirect("message.html", context)
@@ -101,7 +100,9 @@ def delete_post(post_id):
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comments = Comment.objects.filter(post=post)
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'post': post,
         'comments': comments
     }
@@ -124,7 +125,9 @@ def search_results(request):
     search_text = request.POST.get("search_text", "")
     users = User.objects.filter(username__icontains=search_text)
     posts = Post.objects.filter(content__icontains=search_text)
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'search_text': search_text,
         'users': users,
         'posts': posts
@@ -134,7 +137,7 @@ def search_results(request):
 # user interface
 
 @login_required
-def base(request):
+def get_my_friends(request):
     friendships = Friendship.objects.filter(
         Q(from_user_id=request.user.id)
         | Q(to_user_id=request.user.id)
@@ -146,16 +149,14 @@ def base(request):
             friend_id_list.append(friendship.to_user_id)
         else:
             friend_id_list.append(friendship.from_user_id)
-    people = User.objects.filter(id=friend_id_list)
-    context = {
-        'people_amount': len(people),
-        'people': people,
-    }
-    return render(request, 'users/profile.html', context)
+    people = User.objects.filter(id__in=friend_id_list)
+    return people
 
 @login_required
 def message(request, message):
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'message': message,
     }
     return render(request, "message.html", context)
@@ -169,8 +170,24 @@ def send_friendship_request(request):
     print('request from ' + str(my_id) + ' to ' + str(to_user_id))
     Friendship.objects.create(from_user_id=my_id, to_user_id=to_user_id)
     context = {
+        'my_friends_list':my_friends_list,
         'message': 'your friendship request was sent'
     }
+    return render(request, "message.html", context)
+
+@login_required
+def accept_friendship_request(request, friendship_request_id):
+    friendship_request=get_object_or_404(Friendship, id=friendship_request_id)
+    if friendship_request.is_active==False and friendship_request.to_user_id==request.user.id:
+        friendship_request.is_active=True
+        friendship_request.save()
+        context = {
+            'message': 'friendship request accepted'
+        }
+    else:
+        context = {
+            'message': 'there was an error while accepting the request'
+        }
     return render(request, "message.html", context)
 
 @login_required
@@ -191,7 +208,9 @@ def notifications(request):
         ~Q(created_by=request.user),
         post__created_by=request.user
     )
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'friendship_requests': friendship_requests,
         'received_comments': received_comments,
     }
