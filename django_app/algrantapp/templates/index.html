@@ -1,24 +1,14 @@
 {% extends './base.html' %}
 
 {% block main %}
-<h6>{{posts_amount}} posts published</h6>
-<div class="card">
+    <h6>{{posts_amount}} posts published</h6>
+    <div class="card">
         <h3>{{user.username}}, would you like writing something?</h3>
         <form action="{% url 'new_post' %}" method="post">
             {% csrf_token %}
             <input type="text" name="post_content" placeholder="write here..." required>
             <button class="success" type="submit">share</button>
         </form>
-        <div class="row">
-        <div class="col6">
-                <h3>Friends</h3>
-                <button class="success" onclick='location.href="#burgerMenu"'>see your friends</button>
-            </div>
-            <div class="col6">
-                <h3>Profile</h3>
-                <button class="success" onclick='location.href="#burgerMenu"'>go to your profile</button>
-            </div>
-        </div>
     </div>
     <h3>latest posts</h3>
     {% for post in posts %}
