@@ -21,21 +21,25 @@
     <h6>{{this_user.first_name}} {{this_user.last_name}}</h6>
 {% if friendship and friendship.is_active %}
     <p>friendship accepted</p>
-    <div style="display:flex; width:100%">
-        <form action="{% url 'block_user' user_to_block_id=this_user.id %}">
-            {% csrf_token %}
-            <button class="warning" style="margin-right: 4px;" type="submit">block</button>
-        </form>
-        <form action="{% url 'delete_friendship' to_user_id=this_user.id %}">
-            {% csrf_token %}
-            <button class="danger" style="margin-left: 4px;">remove</button>
-        </form>
+    <div class="row">
+        <div class="col6">
+            <form action="{% url 'block_user' user_to_block_id=this_user.id %}">
+                {% csrf_token %}
+                <button class="warning" type="submit">block</button>
+            </form>
+        </div>
+        <div class="col6">
+            <form action="{% url 'delete_friendship' to_user_id=this_user.id %}">
+                {% csrf_token %}
+                <button class="danger" type="submit">remove</button>
+            </form>
+        </div>
     </div>
 {% elif friendship and not friendship.is_active %}
     <p>friendship request pending</p>
     <form action="{% url 'delete_friendship' to_user_id=this_user.id %}">
         {% csrf_token %}
-        <button class="warning" style="margin-left: 4px;">withdraw</button>
+        <button class="warning" type="submit">withdraw</button>
     </form>
 {% else %}
     <p>not a friend</p>
