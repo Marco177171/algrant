@@ -21,6 +21,10 @@
     <h6>{{this_user.first_name}} {{this_user.last_name}}</h6>
 {% if is_friend %}
     <p>friendship accepted</p>
+    <div style="display:flex">
+        <button class="warning">block</button>
+        <button class="danger">remove</button>
+    </div>
 {% else %}
     <p>not a friend</p>
     <form action="{% url 'send_friendship_request' %}" method="post">
