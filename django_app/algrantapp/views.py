@@ -39,22 +39,29 @@ def profile(request):
     return render(request, 'users/profile.html', context)
 
 @login_required
+def get_friendship_with_user(request, this_user_id):
+    friendship_to_find = Friendship.objects.filter(
+        Q(from_user_id=request.user.id, to_user_id=this_user_id) |
+        Q(to_user_id=request.user.id, from_user_id=this_user_id)
+    ).first()
+    return friendship_to_find
+
+@login_required
 def user_profile(request, user_id):
     this_user = get_object_or_404(User, id=user_id)
     if this_user==request.user:
         return redirect(profile)
-    friendship = Friendship.objects.filter(
-        Q(from_user_id=request.user.id, to_user_id=this_user.id) |
-        Q(to_user_id=request.user.id, from_user_id=this_user.id)
-    ).first()
-    is_friend=False
-    if (friendship and friendship.is_active):
-        is_friend=True
+    friendship = get_friendship_with_user(request, this_user.id)
+    # is_friend=False
+    # if (friendship and friendship.is_active==True):
+    #     is_friend=True
     users_post = Post.objects.filter(created_by=this_user).order_by('-id')
     my_friends_list=get_my_friends(request)
     context = {
         'my_friends_list':my_friends_list,
-        'is_friend': is_friend,
+        'friendship': friendship,
+        # 'is_friend': is_friend,
+        # 'is_friendship_active': friendship.is_active,
         'this_user': this_user,
         'posts': users_post,
     }
@@ -87,7 +94,7 @@ def new_post(request):
     return render(request, "post_detail.html", context)
 
 @login_required
-def delete_post(post_id):
+def delete_post(request, post_id):
     Post.objects.delete(id=post_id)
     my_friends_list=get_my_friends(request)
     context = {
@@ -164,11 +171,36 @@ def message(request, message):
 # friendship management
 
 @login_required
-def send_friendship_request(request):
+def send_friendship_request(request, to_user_id):
     my_id = request.user.id
-    to_user_id = request.POST.get('to_user_id', '')
-    print('request from ' + str(my_id) + ' to ' + str(to_user_id))
+    # to_user_id = request.POST.get('to_user_id', '')
     Friendship.objects.create(from_user_id=my_id, to_user_id=to_user_id)
+    context = {
+        'message': 'your friendship request was sent'
+    }
+    return render(request, "message.html", context)
+
+@login_required
+def block_user(request, user_to_block_id):
+    friendship_to_deactivate = get_friendship_with_user(request, user_to_block_id)
+    if friendship_to_deactivate:
+        friendship_to_deactivate.is_active=False
+        friendship_to_deactivate.save()
+        context = {
+            'message': 'User blocked'
+        }
+    else:
+        context = {
+            'message': 'could not block the user. Please try again'
+        }
+    return render(request, "message.html", context)
+
+@login_required
+def delete_friendship(request, to_user_id):
+    # my_id = request.user.id
+    # to_user_id = request.POST.get('to_user_id', '')
+    friendship_to_remove = get_friendship_with_user(request, to_user_id)
+    friendship_to_remove.delete()
     context = {
         'message': 'your friendship request was sent'
     }
