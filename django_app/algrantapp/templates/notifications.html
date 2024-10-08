@@ -30,12 +30,16 @@
     {% endif %}
     <div class="divider"></div>
     <h3>comments</h3>
-    {% for comment in received_comments %}
-        <h6>you received a comment</h6>
-        <a href="{% url 'user_profile' comment.created_by.id %}">{{comment.created_by.username}}</a>
-        <p>{{comment.content}}</p>
-        <a href="{% url 'post_detail' comment.post.id %}">see post</a>
-    {% endfor %}
+    {% if comments %}
+        {% for comment in received_comments %}
+            <h6>you received a comment</h6>
+            <a href="{% url 'user_profile' comment.created_by.id %}">{{comment.created_by.username}}</a>
+            <p>{{comment.content}}</p>
+            <a href="{% url 'post_detail' comment.post.id %}">see post</a>
+        {% endfor %}
+    {% else %}
+        <p>there are no new comments</p>
+    {% endif %}
 {% endblock %}
 
 {% block explorer %}
