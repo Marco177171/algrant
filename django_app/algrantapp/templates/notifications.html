@@ -21,16 +21,25 @@
     {% if friendship_requests %}
         {% for request in friendship_requests %}
             <a href="{% url 'user_profile' user_id=request.from_user_id %}">{{request.from_user_id}}</a>
-            <form action="{% url 'accept_friendship_request' friendship_request_id=request.id %}">
-                <button class="success" type="submit">accept</button>
-            </form>
+            <div class="row">
+                <div class="col6">
+                    <form action="{% url 'accept_friendship_request' friendship_request_id=request.id %}">
+                        <button class="success" type="submit">accept</button>
+                    </form>
+                </div>
+                <div class="col6">
+                    <form action="{% url 'delete_friendship' to_user_id=request.id %}">
+                        <button class="danger" type="submit">decline</button>
+                    </form>
+                </div>
+            </div>
         {% endfor %}
     {% else %}
         <p>there are no new friendship requests</p>
     {% endif %}
     <div class="divider"></div>
     <h3>comments</h3>
-    {% if comments %}
+    {% if received_comments %}
         {% for comment in received_comments %}
             <h6>you received a comment</h6>
             <a href="{% url 'user_profile' comment.created_by.id %}">{{comment.created_by.username}}</a>
