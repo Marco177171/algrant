@@ -6,6 +6,7 @@ COPY . .
 
 RUN pip install django
 RUN pip install psycopg
+RUN pip install django-channels
 
 RUN sh wait-for-postgres.sh
 
