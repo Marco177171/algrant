@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load static %}
 
 {% block sidebar %}
     {% if my_friends_list %}
@@ -30,7 +31,8 @@
         <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
         <span>{{post.date_time}}</span>
         <p>{{ post.content }}</p>
-        <a href="{% url 'post_detail' post_id=post.id %}">More</a>
+        <!-- <a href="">Like <img src="{% static 'icons/heart_empty.png' %}" height="13px" alt="love"></a> -->
+        <a href="{% url 'post_detail' post_id=post.id %}">Open</a>
     {% endfor %}
 {% endblock %}
 

@@ -39,7 +39,7 @@
     <p>friendship request pending</p>
     <form action="{% url 'delete_friendship' to_user_id=this_user.id %}">
         {% csrf_token %}
-        <button class="warning" type="submit">withdraw</button>
+        <button class="warning" type="submit">withdraw request</button>
     </form>
 {% else %}
     <p>not a friend</p>
