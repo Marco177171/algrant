@@ -30,11 +30,6 @@ def user_logout(request):
     return redirect("login")
 
 @login_required
-def user_password_change(request):
-    password_change(request)
-    return redirect("password_change")
-
-@login_required
 def profile(request):
     my_friends_list=get_my_friends(request)
     context = {
@@ -244,19 +239,24 @@ def remove_friendship_request(request, friendship_request_id):
     }
     return render(request, 'message.html', context)
 
+def get_comments_on_my_posts(request):
+    received_comments = Comment.objects.filter(
+        ~Q(created_by=request.user),
+        post__created_by=request.user
+    )
+    return received_comments
+
+
 @login_required
 def notifications(request):
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,
     )
-    received_comments = Comment.objects.filter(
-        ~Q(created_by=request.user),
-        post__created_by=request.user
-    )
+    received_comments = get_comments_on_my_posts(request)
     my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
+        'my_friends_list': my_friends_list,
         'friendship_requests': friendship_requests,
         'received_comments': received_comments,
     }
