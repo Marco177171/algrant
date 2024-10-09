@@ -60,7 +60,7 @@
         <form action="{% url 'search_results' %}" method="post">
             {% csrf_token %}
             <input class="search" type="text" name="search_text" placeholder="search" required>
-            <button class="success" type="submit">search</button>
+            <button class="success" type="submit">Search posts and people</button>
         </form>
     </div>
     {% block overlap %}
