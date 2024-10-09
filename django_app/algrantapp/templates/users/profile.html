@@ -24,7 +24,7 @@
     <div class="divider"></div>
     <span>{{post.date_time}}</span>
     <p>{{ post.content }}</p>
-    <a href="{% url 'post_detail' post_id=post.id %}">Learn more</a>
+    <a href="{% url 'post_detail' post_id=post.id %}">Open</a>
 {% endfor %}
 </div>
 {% endblock %}

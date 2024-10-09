@@ -28,13 +28,17 @@
             <button class="success" type="submit">comment</button>
         </form>
     </div>
-    <h3>comments</h3>
-    {% for comment in comments %}
-        <div class="divider"></div>
-        <a href="{% url 'user_profile' user_id=comment.created_by.id %}">{{comment.created_by}}</a>
-        <span>{{comment.date_time}}</span>
-        <p>{{comment.content}}</p>
-    {% endfor %}
+    {% if comments %}
+        <h3>comments</h3>
+        {% for comment in comments %}
+            <div class="divider"></div>
+            <a href="{% url 'user_profile' user_id=comment.created_by.id %}">{{comment.created_by}}</a>
+            <span>{{comment.date_time}}</span>
+            <p>{{comment.content}}</p>
+        {% endfor %}
+    {% else %}
+        <h3>no comments yet</h3>
+    {% endif %}
 {% endblock %}
 
 {% block explorer %}
