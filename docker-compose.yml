@@ -14,10 +14,6 @@ services:
 
 networks:
   algrantNet:
-<<<<<<< HEAD
-=======
 
 volumes:
   algrant_django_volume:
-  algrant_postgres_volume:
->>>>>>> dev
