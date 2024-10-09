@@ -19,6 +19,8 @@ services:
     build: ./django_app
     ports:
       - 8002:8000
+    volumes:
+      - algrant_django_volume:/var/lib/django/data
     networks:
       - algrantNet
     env_file:
@@ -29,4 +31,5 @@ networks:
   algrantNet:
 
 volumes:
+  algrant_django_volume:
   algrant_postgres_volume:

@@ -29,3 +29,18 @@ class Notification (models.Model):
     content = models.CharField(max_length=256)
     def __str__(self):
         return self.content
+
+class Conversation(models.Model):
+    conversation_name = models.TextField(max_length=128, default='chat')
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.conversation_name
+
+class Message(models.Model):
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.content
