@@ -15,9 +15,10 @@
 {% endblock %}
 
 {% block main %}
+    <h6>post detail</h6>
+    <div class="divider"></div>
     <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
     <span>{{post.date_time}}</span>
-    <div class="divider"></div>
     <h5>{{post.content}}</h5>
     <div class="card">
         <form action="{% url 'new_comment' %}" method="post">
