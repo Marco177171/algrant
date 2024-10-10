@@ -284,14 +284,14 @@ def notifications(request):
     friendship_requests = get_my_friendship_requests(request)
     received_comments = get_comments_on_my_posts(request)
     for friendship in friendship_requests:
-        if friendship.seen_by_to_user == False:
-            friendship.seen_by_to_user=True
+        if friendship.seen == False:
+            friendship.seen=True
             friendship.save()
     for comment in received_comments:
-        if comment.seen_by_to_user == False:
-            comment.seen_by_to_user=True
+        if comment.seen == False:
+            comment.seen=True
             comment.save()
-    visualize_notifications(received_comments, friendship_requests)
+    # visualize_notifications(received_comments, friendship_requests)
     my_friends_list=get_my_friends(request)
     context = {
         'my_friends_list': my_friends_list,
