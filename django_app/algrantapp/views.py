@@ -47,13 +47,8 @@ def get_friendship_with_user(request, this_user_id):
     return friendship_to_find
 
 @login_required
-def get_user_by_id(user_id):
-    this_user = get_object_or_404(User, id=user_id)
-    return this_user
-
-@login_required
 def user_profile(request, user_id):
-    this_user = get_user_by_id(user_id)
+    this_user = get_object_or_404(User, id=user_id)
     if this_user==request.user:
         return redirect(profile)
     friendship = get_friendship_with_user(request, this_user.id)
