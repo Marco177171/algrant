@@ -20,7 +20,7 @@ services:
     ports:
       - 8002:8000
     volumes:
-      - algrant_django_volume:/var/lib/django/data
+      - algrant_django_volume:/var/lib/data
     networks:
       - algrantNet
     env_file:

@@ -1,0 +1,9 @@
+DATABASE:
+    - capire come eseguire migrazioni in modo sicuro
+
+EMAIL:
+    - recupero password
+    - controllo dell'account alla registrazione (invio link attivazione)
+
+NOTIFICHE:
+    - controllo presenza notifiche non viste
