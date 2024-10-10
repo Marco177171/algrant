@@ -47,8 +47,13 @@ def get_friendship_with_user(request, this_user_id):
     return friendship_to_find
 
 @login_required
-def user_profile(request, user_id):
+def get_user_by_id(user_id):
     this_user = get_object_or_404(User, id=user_id)
+    return this_user
+
+@login_required
+def user_profile(request, user_id):
+    this_user = get_user_by_id(user_id)
     if this_user==request.user:
         return redirect(profile)
     friendship = get_friendship_with_user(request, this_user.id)
@@ -261,8 +266,23 @@ def get_my_friendship_requests(request):
     )
     return friendship_requests
 
+# @login_required
+# def visualize_notifications(received_comments, friendship_requests):
+#     for friendship in friendship_requests:
+#         if friendship.seen_by_to_user == False:
+#             friendship.seen_by_to_user=True
+#             friendship.save()
+#     for comment in received_comments:
+#         if comment.seen_by_to_user == False:
+#             comment.seen_by_to_user=True
+#             comment.save()
+#     return
+
+
 @login_required
-def visualize_notifications(received_comments, friendship_requests):
+def notifications(request):
+    friendship_requests = get_my_friendship_requests(request)
+    received_comments = get_comments_on_my_posts(request)
     for friendship in friendship_requests:
         if friendship.seen_by_to_user == False:
             friendship.seen_by_to_user=True
@@ -271,13 +291,6 @@ def visualize_notifications(received_comments, friendship_requests):
         if comment.seen_by_to_user == False:
             comment.seen_by_to_user=True
             comment.save()
-    return
-
-
-@login_required
-def notifications(request):
-    friendship_requests = get_my_friendship_requests(request)
-    received_comments = get_comments_on_my_posts(request)
     visualize_notifications(received_comments, friendship_requests)
     my_friends_list=get_my_friends(request)
     context = {
