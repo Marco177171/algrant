@@ -314,6 +314,7 @@ footer a:hover {color: purple;}
 @media only screen and (max-width: 950px) {
 	main, nav, .explorer, .main_bottom {left: 0px;}
 	.sideBar {display: none;}
+	.explorer {text-align: unset;}
 }
 
 button {
