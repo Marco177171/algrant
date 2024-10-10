@@ -15,6 +15,7 @@ class Comment (models.Model):
     date_time = models.DateTimeField(auto_now=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     content = models.TextField(max_length=512)
+    seen = models.BooleanField(default=False)
     def __str__(self):
         return self.content
 
@@ -22,11 +23,13 @@ class Friendship (models.Model):
     from_user_id = models.IntegerField()
     to_user_id = models.IntegerField()
     is_active = models.BooleanField(default=False)
+    seen = models.BooleanField(default=False)
     def __str__(self):
         return str(self.from_user_id) + str(self.to_user_id)
     
 class Notification (models.Model):
     content = models.CharField(max_length=256)
+    seen = models.BooleanField(default=False)
     def __str__(self):
         return self.content
 
@@ -42,5 +45,6 @@ class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    seen = models.BooleanField(default=False)
     def __str__(self):
         return self.content

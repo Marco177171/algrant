@@ -71,7 +71,7 @@ def user_profile(request, user_id):
 
 @login_required
 def index(request):
-    posts=Post.objects.order_by('-id')
+    posts=Post.objects.order_by('-id')[:50]
     my_friends_list=get_my_friends(request)
     context = {
         'my_friends_list':my_friends_list,
@@ -174,6 +174,12 @@ def message(request, message):
 def send_friendship_request(request, to_user_id):
     my_id = request.user.id
     # to_user_id = request.POST.get('to_user_id', '')
+    friendship = Friendship(from_user_id=to_user_id, to_user_id=request.user.id)
+    if (friendship)
+        context = {
+            'message': 'the user already requested you a friendship, find it in your Notifications'
+        }
+        return render(request, 'message.html', context)
     Friendship.objects.create(from_user_id=my_id, to_user_id=to_user_id)
     context = {
         'message': 'your friendship request was sent'
@@ -239,6 +245,7 @@ def remove_friendship_request(request, friendship_request_id):
     }
     return render(request, 'message.html', context)
 
+@login_required
 def get_comments_on_my_posts(request):
     received_comments = Comment.objects.filter(
         ~Q(created_by=request.user),
@@ -246,14 +253,32 @@ def get_comments_on_my_posts(request):
     )
     return received_comments
 
-
 @login_required
-def notifications(request):
+def get_my_friendship_requests(request):
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,
     )
+    return friendship_requests
+
+@login_required
+def visualize_notifications(received_comments, friendship_requests):
+    for friendship in friendship_requests:
+        if friendship.seen_by_to_user == False:
+            friendship.seen_by_to_user=True
+            friendship.save()
+    for comment in received_comments:
+        if comment.seen_by_to_user == False:
+            comment.seen_by_to_user=True
+            comment.save()
+    return
+
+
+@login_required
+def notifications(request):
+    friendship_requests = get_my_friendship_requests(request)
     received_comments = get_comments_on_my_posts(request)
+    visualize_notifications(received_comments, friendship_requests)
     my_friends_list=get_my_friends(request)
     context = {
         'my_friends_list': my_friends_list,
