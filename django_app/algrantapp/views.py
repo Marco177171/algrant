@@ -175,7 +175,7 @@ def send_friendship_request(request, to_user_id):
     my_id = request.user.id
     # to_user_id = request.POST.get('to_user_id', '')
     friendship = Friendship(from_user_id=to_user_id, to_user_id=request.user.id)
-    if (friendship)
+    if (friendship):
         context = {
             'message': 'the user already requested you a friendship, find it in your Notifications'
         }
