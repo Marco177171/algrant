@@ -172,19 +172,18 @@ def message(request, message):
 
 @login_required
 def send_friendship_request(request, to_user_id):
-    my_id = request.user.id
-    # to_user_id = request.POST.get('to_user_id', '')
-    friendship = Friendship(from_user_id=to_user_id, to_user_id=my_id)
-    if (friendship):
+    friendship = Friendship(from_user_id=to_user_id, to_user_id=request.user.id)
+    if (friendship.DoesNotExist()):
+        Friendship.objects.create(from_user_id=request.user.id, to_user_id=to_user_id)
+        context = {
+            'message': 'your friendship request was sent'
+        }
+        return render(request, "message.html", context)
+    else:
         context = {
             'message': 'the user already requested you a friendship, find it in your Notifications'
         }
         return render(request, 'message.html', context)
-    Friendship.objects.create(from_user_id=my_id, to_user_id=to_user_id)
-    context = {
-        'message': 'your friendship request was sent'
-    }
-    return render(request, "message.html", context)
 
 @login_required
 def block_user(request, user_to_block_id):
