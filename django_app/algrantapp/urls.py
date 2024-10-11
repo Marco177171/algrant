@@ -22,7 +22,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     # ACCOUNT MANAGEMENT
     path('profile', views.profile, name='profile'),
-    path('user_profile/<int:user_id>', views.user_profile, name='user_profile'),
+    path('user_profile/<str:username>', views.user_profile, name='user_profile'),
     path('register', views.register, name='register'),
     path('user_logout', views.user_logout, name='user_logout'),
     # POSTING

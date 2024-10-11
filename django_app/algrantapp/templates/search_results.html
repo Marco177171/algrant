@@ -5,7 +5,7 @@
     <ul>
         {% for friend in my_friends_list %}
         <li>
-            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+            <a href="{% url 'user_profile' username=friend.username %}">{{friend.username}}</a>
         </li>
         {% endfor %}
     </ul>
@@ -21,7 +21,7 @@
 <h4>users</h4>
 {% if found_users %}
     {% for found_user in found_users %}
-    <a href="{% url 'user_profile' user_id=found_user.id %}">{{found_user.username}}</a>
+    <a href="{% url 'user_profile' username=found_user.username %}">{{found_user.username}}</a>
     {% endfor %}
 {% else %}
     <p>no users found</p>
@@ -31,7 +31,7 @@
 {% if posts %}
     {% for post in posts %}
     <div class="divider"></div>
-    <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
+    <a href="{% url 'user_profile' username=post.created_by.username %}">{{post.created_by}}</a>
     <p>{{post.content}}</p>
     <a href="{% url 'post_detail' post_id=post.id %}">Learn more</a>
     {% endfor %}

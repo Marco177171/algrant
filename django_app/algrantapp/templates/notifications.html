@@ -5,7 +5,7 @@
     <ul>
         {% for friend in my_friends_list %}
         <li>
-            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+            <a href="{% url 'user_profile' username=friend.username %}">{{friend.username}}</a>
         </li>
         {% endfor %}
     </ul>
@@ -18,9 +18,9 @@
     <h6>notifications</h6>
     <div class="divider"></div>
     <h3>friendship requests</h3>
-    {% if friendship_requests %}
-        {% for request in friendship_requests %}
-            <a href="{% url 'user_profile' user_id=request.from_user_id %}">{{request.from_user_id}}</a>
+    {% if requests_with_usernames %}
+        {% for request in requests_with_usernames %}
+            <a href="{% url 'user_profile' username=request.from_user_username %}">{{request.from_user_username}}</a>
             <div class="row">
                 <div class="col6">
                     <form action="{% url 'accept_friendship_request' friendship_request_id=request.id %}">
@@ -44,7 +44,7 @@
     {% if received_comments %}
         {% for comment in received_comments %}
             <h6>you received a comment</h6>
-            <a href="{% url 'user_profile' comment.created_by.id %}">{{comment.created_by.username}}</a>
+            <a href="{% url 'user_profile' comment.created_by.username %}">{{comment.created_by.username}}</a>
             <p>{{comment.content}}</p>
             <a href="{% url 'post_detail' comment.post.id %}">See post</a>
         {% endfor %}

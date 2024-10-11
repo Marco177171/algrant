@@ -6,7 +6,7 @@
     <ul>
         {% for friend in my_friends_list %}
         <li>
-            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+            <a href="{% url 'user_profile' username=friend.username %}">{{friend.username}}</a>
         </li>
         {% endfor %}
     </ul>
@@ -28,7 +28,7 @@
     <h3>latest posts</h3>
     {% for post in posts %}
         <div class="divider"></div>
-        <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
+        <a href="{% url 'user_profile' username=post.created_by.username %}">{{post.created_by}}</a>
         <span>{{post.date_time}}</span>
         <p>{{ post.content }}</p>
         <!-- <a href="">Like <img src="{% static 'icons/heart_empty.png' %}" height="13px" alt="love"></a> -->

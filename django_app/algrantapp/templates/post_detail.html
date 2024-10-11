@@ -5,7 +5,7 @@
     <ul>
         {% for friend in my_friends_list %}
         <li>
-            <a href="{% url 'user_profile' user_id=friend.id %}">{{friend.username}}</a>
+            <a href="{% url 'user_profile' username=friend.username %}">{{friend.username}}</a>
         </li>
         {% endfor %}
     </ul>
@@ -17,7 +17,7 @@
 {% block main %}
     <h6>post detail</h6>
     <div class="divider"></div>
-    <a href="{% url 'user_profile' user_id=post.created_by.id %}">{{post.created_by}}</a>
+    <a href="{% url 'user_profile' username=post.created_by.username %}">{{post.created_by}}</a>
     <span>{{post.date_time}}</span>
     <h5>{{post.content}}</h5>
     <div class="card">
@@ -32,7 +32,7 @@
         <h3>comments</h3>
         {% for comment in comments %}
             <div class="divider"></div>
-            <a href="{% url 'user_profile' user_id=comment.created_by.id %}">{{comment.created_by}}</a>
+            <a href="{% url 'user_profile' username=comment.created_by.username %}">{{comment.created_by}}</a>
             <span>{{comment.date_time}}</span>
             <p>{{comment.content}}</p>
         {% endfor %}
