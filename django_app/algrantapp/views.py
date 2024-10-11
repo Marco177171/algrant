@@ -277,36 +277,6 @@ def get_user_by_id(user_id):
     user = User.objects.get(id=user_id)
     return user
 
-# @login_required
-# def notifications(request):
-#     friendship_requests = get_my_friendship_requests(request)
-#     # Create a dictionary to map from_user_id to the username
-#     requests_with_usernames = []
-#     for request in friendship_requests:
-#         from_user = User.objects.get(id=request.from_user_id)
-#         requests_with_usernames.append({
-#             'id': request.id,
-#             'from_user_id': request.from_user_id,
-#             'from_user_username': from_user.username
-#         })
-#     received_comments = get_comments_on_my_posts(request)
-#     for friendship in friendship_requests:
-#         if friendship.seen == False:
-#             friendship.seen=True
-#             friendship.save()
-#     for comment in received_comments:
-#         if comment.seen == False:
-#             comment.seen=True
-#             comment.save()
-#     # visualize_notifications(received_comments, friendship_requests)
-#     my_friends_list=get_my_friends(request)
-#     context = {
-#         'my_friends_list': my_friends_list,
-#         'requests_with_usernames': requests_with_usernames,
-#         'received_comments': received_comments,
-#     }
-#     return render(request, 'notifications.html', context)
-
 @login_required
 def notifications(request):
     friendship_requests = Friendship.objects.filter(
