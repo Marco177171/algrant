@@ -173,14 +173,17 @@ def message(request, message):
 @login_required
 def send_friendship_request(request, to_user_id):
     friendship = Friendship(from_user_id=to_user_id, to_user_id=request.user.id)
+    my_friends_list=get_my_friends(request)
     if (friendship.DoesNotExist()):
         Friendship.objects.create(from_user_id=request.user.id, to_user_id=to_user_id)
         context = {
+            'my_friends_list':my_friends_list,
             'message': 'your friendship request was sent'
         }
         return render(request, "message.html", context)
     else:
         context = {
+            'my_friends_list':my_friends_list,
             'message': 'the user already requested you a friendship, find it in your Notifications'
         }
         return render(request, 'message.html', context)
@@ -188,10 +191,12 @@ def send_friendship_request(request, to_user_id):
 @login_required
 def block_user(request, user_to_block_id):
     friendship_to_deactivate = get_friendship_with_user(request, user_to_block_id)
+    my_friends_list=get_my_friends(request)
     if friendship_to_deactivate:
         friendship_to_deactivate.is_active=False
         friendship_to_deactivate.save()
         context = {
+            'my_friends_list':my_friends_list,
             'message': 'User blocked'
         }
     else:
@@ -205,8 +210,10 @@ def delete_friendship(request, to_user_id):
     # my_id = request.user.id
     # to_user_id = request.POST.get('to_user_id', '')
     friendship_to_remove = get_friendship_with_user(request, to_user_id)
+    my_friends_list=get_my_friends(request)
     friendship_to_remove.delete()
     context = {
+        'my_friends_list':my_friends_list,
         'message': 'your friendship request was sent'
     }
     return render(request, "message.html", context)
@@ -214,14 +221,17 @@ def delete_friendship(request, to_user_id):
 @login_required
 def accept_friendship_request(request, friendship_request_id):
     friendship_request=get_object_or_404(Friendship, id=friendship_request_id)
+    my_friends_list=get_my_friends(request)
     if friendship_request.is_active==False and friendship_request.to_user_id==request.user.id:
         friendship_request.is_active=True
         friendship_request.save()
         context = {
+            'my_friends_list':my_friends_list,
             'message': 'friendship request accepted'
         }
     else:
         context = {
+            'my_friends_list':my_friends_list,
             'message': 'there was an error while accepting the request'
         }
     return render(request, "message.html", context)
@@ -239,7 +249,9 @@ def all_users(request):
 @login_required
 def remove_friendship_request(request, friendship_request_id):
     Friendship.objects.delete(id=friendship_request_id)
+    my_friends_list=get_my_friends(request)
     context = {
+        'my_friends_list':my_friends_list,
         'message': 'your request was deleted'
     }
     return render(request, 'message.html', context)
@@ -279,6 +291,7 @@ def get_user_by_id(user_id):
 
 @login_required
 def notifications(request):
+    my_friends_list=get_my_friends(request)
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,  # Assuming this is the field for the recipient
@@ -301,6 +314,7 @@ def notifications(request):
             comment.seen = True
             comment.save()
     context = {
+        'my_friends_list': my_friends_list,
         'requests_with_usernames': requests_with_usernames,
         'received_comments': received_comments,
     }
