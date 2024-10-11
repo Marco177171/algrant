@@ -47,8 +47,8 @@ def get_friendship_with_user(request, this_user_id):
     return friendship_to_find
 
 @login_required
-def user_profile(request, user_id):
-    this_user = get_object_or_404(User, id=user_id)
+def user_profile(request, username):
+    this_user = User.objects.get(username=username)
     if this_user==request.user:
         return redirect(profile)
     friendship = get_friendship_with_user(request, this_user.id)
@@ -272,24 +272,36 @@ def get_my_friendship_requests(request):
 #             comment.save()
 #     return
 
+@login_required
+def get_user_by_id(user_id):
+    user = User.objects.get(id=user_id)
+    return user
 
 @login_required
 def notifications(request):
-    friendship_requests = get_my_friendship_requests(request)
+    friendship_requests = Friendship.objects.filter(
+        is_active=False,
+        to_user_id=request.user.id,  # Assuming this is the field for the recipient
+    )
+    requests_with_usernames = []
+    for request_obj in friendship_requests:
+        from_user = User.objects.get(id=request_obj.from_user_id)  # Assuming from_user_id is the correct field
+        requests_with_usernames.append({
+            'id': request_obj.id,
+            'from_user_id': request_obj.from_user_id,
+            'from_user_username': from_user.username
+        })
     received_comments = get_comments_on_my_posts(request)
     for friendship in friendship_requests:
         if friendship.seen == False:
-            friendship.seen=True
+            friendship.seen = True
             friendship.save()
     for comment in received_comments:
         if comment.seen == False:
-            comment.seen=True
+            comment.seen = True
             comment.save()
-    # visualize_notifications(received_comments, friendship_requests)
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list': my_friends_list,
-        'friendship_requests': friendship_requests,
+        'requests_with_usernames': requests_with_usernames,
         'received_comments': received_comments,
     }
     return render(request, 'notifications.html', context)
