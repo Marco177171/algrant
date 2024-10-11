@@ -180,13 +180,12 @@ def send_friendship_request(request, to_user_id):
             'my_friends_list':my_friends_list,
             'message': 'your friendship request was sent'
         }
-        return render(request, "message.html", context)
     else:
         context = {
             'my_friends_list':my_friends_list,
             'message': 'the user already requested you a friendship, find it in your Notifications'
         }
-        return render(request, 'message.html', context)
+    return render(request, 'message.html', context)
 
 @login_required
 def block_user(request, user_to_block_id):
@@ -207,14 +206,12 @@ def block_user(request, user_to_block_id):
 
 @login_required
 def delete_friendship(request, to_user_id):
-    # my_id = request.user.id
-    # to_user_id = request.POST.get('to_user_id', '')
-    friendship_to_remove = get_friendship_with_user(request, to_user_id)
     my_friends_list=get_my_friends(request)
+    friendship_to_remove = get_friendship_with_user(request, to_user_id)
     friendship_to_remove.delete()
     context = {
-        'my_friends_list':my_friends_list,
-        'message': 'your friendship request was sent'
+        'my_friends_list': my_friends_list,
+        'message': 'friendship removed'
     }
     return render(request, "message.html", context)
 
