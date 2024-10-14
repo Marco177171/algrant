@@ -1,3 +1,6 @@
+CHAT:
+	- implementare chat semplice
+
 DATABASE:
     - capire come eseguire migrazioni in modo sicuro
 

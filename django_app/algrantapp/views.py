@@ -31,9 +31,7 @@ def user_logout(request):
 
 @login_required
 def profile(request):
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'posts':Post.objects.filter(created_by=request.user).order_by('-id')
     }
     return render(request, 'users/profile.html', context)
@@ -56,9 +54,7 @@ def user_profile(request, username):
     # if (friendship and friendship.is_active==True):
     #     is_friend=True
     users_post = Post.objects.filter(created_by=this_user).order_by('-id')
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'friendship': friendship,
         # 'is_friend': is_friend,
         # 'is_friendship_active': friendship.is_active,
@@ -72,9 +68,7 @@ def user_profile(request, username):
 @login_required
 def index(request):
     posts=Post.objects.order_by('-id')[:50]
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'posts': posts,
         'posts_amount': len(posts),
     }
@@ -86,9 +80,7 @@ def index(request):
 def new_post(request):
     post_content = request.POST.get("post_content", "")
     this_post = Post.objects.create(content=post_content, created_by=request.user)
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'post': this_post,
     }
     return render(request, "post_detail.html", context)
@@ -96,9 +88,7 @@ def new_post(request):
 @login_required
 def delete_post(request, post_id):
     Post.objects.delete(id=post_id)
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'message': 'The post and all related comments were successfully erased',
     }
     return redirect("message.html", context)
@@ -106,10 +96,8 @@ def delete_post(request, post_id):
 @login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    comments = Comment.objects.filter(post=post)
-    my_friends_list=get_my_friends(request)
+    comments = Comment.objects.filter(post=post).order_by('-id')
     context = {
-        'my_friends_list':my_friends_list,
         'post': post,
         'comments': comments
     }
@@ -122,7 +110,10 @@ def new_comment(request):
     comment_content = request.POST.get("comment_content", "")
     post_id = request.POST.get("post_id", "")
     post = get_object_or_404(Post, id=post_id)
-    Comment.objects.create(post=post, content=comment_content, created_by=request.user)
+    if post.created_by == request.user:
+        Comment.objects.create(post=post, content=comment_content, created_by=request.user, seen=True)
+    else:
+        Comment.objects.create(post=post, content=comment_content, created_by=request.user, seen=False)
     return redirect(post_detail, post_id)
 
 # search engine
@@ -132,9 +123,7 @@ def search_results(request):
     search_text = request.POST.get("search_text", "")
     found_users = User.objects.filter(username__icontains=search_text)
     posts = Post.objects.filter(content__icontains=search_text)
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'search_text': search_text,
         'found_users': found_users,
         'posts': posts
@@ -144,26 +133,8 @@ def search_results(request):
 # user interface
 
 @login_required
-def get_my_friends(request):
-    friendships = Friendship.objects.filter(
-        Q(from_user_id=request.user.id)
-        | Q(to_user_id=request.user.id)
-        & Q(is_active=True)
-    )
-    friend_id_list=[]
-    for friendship in friendships:
-        if friendship.to_user_id != request.user.id:
-            friend_id_list.append(friendship.to_user_id)
-        else:
-            friend_id_list.append(friendship.from_user_id)
-    people = User.objects.filter(id__in=friend_id_list)
-    return people
-
-@login_required
 def message(request, message):
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'message': message,
     }
     return render(request, "message.html", context)
@@ -173,16 +144,13 @@ def message(request, message):
 @login_required
 def send_friendship_request(request, to_user_id):
     friendship = Friendship(from_user_id=to_user_id, to_user_id=request.user.id)
-    my_friends_list=get_my_friends(request)
     if (friendship.DoesNotExist()):
         Friendship.objects.create(from_user_id=request.user.id, to_user_id=to_user_id)
         context = {
-            'my_friends_list':my_friends_list,
             'message': 'your friendship request was sent'
         }
     else:
         context = {
-            'my_friends_list':my_friends_list,
             'message': 'the user already requested you a friendship, find it in your Notifications'
         }
     return render(request, 'message.html', context)
@@ -190,12 +158,10 @@ def send_friendship_request(request, to_user_id):
 @login_required
 def block_user(request, user_to_block_id):
     friendship_to_deactivate = get_friendship_with_user(request, user_to_block_id)
-    my_friends_list=get_my_friends(request)
     if friendship_to_deactivate:
         friendship_to_deactivate.is_active=False
         friendship_to_deactivate.save()
         context = {
-            'my_friends_list':my_friends_list,
             'message': 'User blocked'
         }
     else:
@@ -206,11 +172,9 @@ def block_user(request, user_to_block_id):
 
 @login_required
 def delete_friendship(request, to_user_id):
-    my_friends_list=get_my_friends(request)
     friendship_to_remove = get_friendship_with_user(request, to_user_id)
     friendship_to_remove.delete()
     context = {
-        'my_friends_list': my_friends_list,
         'message': 'friendship removed'
     }
     return render(request, "message.html", context)
@@ -218,17 +182,14 @@ def delete_friendship(request, to_user_id):
 @login_required
 def accept_friendship_request(request, friendship_request_id):
     friendship_request=get_object_or_404(Friendship, id=friendship_request_id)
-    my_friends_list=get_my_friends(request)
     if friendship_request.is_active==False and friendship_request.to_user_id==request.user.id:
         friendship_request.is_active=True
         friendship_request.save()
         context = {
-            'my_friends_list':my_friends_list,
             'message': 'friendship request accepted'
         }
     else:
         context = {
-            'my_friends_list':my_friends_list,
             'message': 'there was an error while accepting the request'
         }
     return render(request, "message.html", context)
@@ -236,9 +197,7 @@ def accept_friendship_request(request, friendship_request_id):
 @login_required
 def all_users(request):
     all_users = User.objects.all()
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'all_users': all_users
     }
     return render(request, 'all_users.html', context)
@@ -246,9 +205,7 @@ def all_users(request):
 @login_required
 def remove_friendship_request(request, friendship_request_id):
     Friendship.objects.delete(id=friendship_request_id)
-    my_friends_list=get_my_friends(request)
     context = {
-        'my_friends_list':my_friends_list,
         'message': 'your request was deleted'
     }
     return render(request, 'message.html', context)
@@ -258,7 +215,7 @@ def get_comments_on_my_posts(request):
     received_comments = Comment.objects.filter(
         ~Q(created_by=request.user),
         post__created_by=request.user
-    )
+    ).order_by('-id')
     return received_comments
 
 @login_required
@@ -266,7 +223,7 @@ def get_my_friendship_requests(request):
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,
-    )
+    ).order_by('-id')
     return friendship_requests
 
 # @login_required
@@ -288,7 +245,6 @@ def get_user_by_id(user_id):
 
 @login_required
 def notifications(request):
-    my_friends_list=get_my_friends(request)
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,  # Assuming this is the field for the recipient
@@ -311,7 +267,6 @@ def notifications(request):
             comment.seen = True
             comment.save()
     context = {
-        'my_friends_list': my_friends_list,
         'requests_with_usernames': requests_with_usernames,
         'received_comments': received_comments,
     }
