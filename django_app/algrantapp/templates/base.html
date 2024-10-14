@@ -16,14 +16,23 @@
         <a href="{% url 'index' %}">Index</a>
         {% if user.is_authenticated %}
         <a href="{% url 'profile' %}" style="float:right">{{user.username}}</a>
-        <a href="{% url 'notifications' %}" style="float:right">Notifications</a>
+        <a href="{% url 'notifications' %}" style="float:right">Notifications {{unseen_friendship_requests}} | {{unseen_comments}}</a>
         {% endif %}
     </nav>
     <div class="sideBar">
         <p>people | <a href="{% url 'all_users' %}">See all</a></p>
         <div class="sideBarSub">
-            {% block sidebar %}
-            {% endblock %}
+            {% if my_friends_list %}
+            <ul>
+                {% for friend in my_friends_list %}
+                <li>
+                    <a href="{% url 'user_profile' username=friend.username %}">{{friend.username}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>no friends yet</p>
+            {% endif %}
         </div>
         <div class="sideBarBottom">
             <div class="divider"></div>
@@ -34,27 +43,6 @@
     <main>
         {% block main %}
         {% endblock %}
-        <!-- <footer>
-            <div class="row">
-                <div class="col4">
-                    <p>studio pulsar 2024</p>
-                </div>
-                <div class="col4">
-                    <ul>
-                        <li><a href="">link</a></li>
-                        <li><a href="">link</a></li>
-                        <li><a href="">link</a></li>
-                    </ul>
-                </div>
-                <div class="col4">
-                    <ul>
-                        <li><a href="">link</a></li>
-                        <li><a href="">link</a></li>
-                        <li><a href="">link</a></li>
-                    </ul>
-                </div>
-            </div>
-        </footer> -->
     </main>
     <div class="main_bottom">
         <form action="{% url 'search_results' %}" method="post">
