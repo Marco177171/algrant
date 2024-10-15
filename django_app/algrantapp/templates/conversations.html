@@ -1,0 +1,18 @@
+{% extends './base.html' %}
+
+{% block main %}
+    <h1>Your chats</h1>
+    {% if conversations %}
+        {% for conversation in conversations %}
+            <div class="divider"></div>
+            <a href="{% url 'conversation' conversation_id=conversation.id %}">{{conversation.conversation_name}}</a>
+        {% endfor %}
+    {% else %}
+        <h3>No chats yet</h3>
+    {% endif %}
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">Index</a>
+<a href="{% url 'all_users' %}">Algrant people</a>
+{% endblock %}

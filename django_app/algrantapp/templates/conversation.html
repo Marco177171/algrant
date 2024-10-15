@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <p>algrant</p>
+        <p>{{conversation.conversation_name}}</p>
     </header>
     <nav>
         <a href="{% url 'index' %}">Index</a>
@@ -43,15 +43,33 @@
         </div>
     </div>
     <main>
-        {% block main %}
-        {% endblock %}
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.sender == request.user %}
+                    <div class="divider"></div>
+                    <div style="text-align: right;">
+                        <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
+                        <span>{{message.timestamp}}</span>
+                        <p>{{message.content}}</p>
+                    </div>
+                {% else %}
+                    <div class="divider"></div>
+                    <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
+                    <span>{{message.timestamp}}</span>
+                    <p>{{message.content}}</p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <h3>No messages yet</h3>
+        {% endif %}
     </main>
     <div class="main_bottom">
-        <form action="{% url 'search_results' %}" method="post">
+        <form action="{% url 'new_message' conversation_id=conversation.id %}" method="post">
             {% csrf_token %}
-            <input class="search" type="text" name="search_text" placeholder="Search posts and people" required>
+            <input class="search" type="text" name="message_text" placeholder="Write your message here" required>
         </form>
     </div>
+
     <div class="explorer">
         {% block explorer %}
         {% endblock %}

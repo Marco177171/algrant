@@ -271,3 +271,28 @@ def notifications(request):
         'received_comments': received_comments,
     }
     return render(request, 'notifications.html', context)
+
+@login_required
+def my_conversations(request):
+    conversations = Conversation.objects.filter(participants=request.user)
+    context = {
+        'conversations': conversations
+    }
+    return render(request, 'conversations.html', context)
+
+@login_required
+def conversation(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    messages = Message.objects.filter(conversation=conversation).order_by('id')
+    context = {
+        'conversation': conversation,
+        'messages': messages,
+    }
+    return render(request, 'conversation.html', context)
+
+@login_required
+def new_message(request, conversation_id):
+    message_text = request.POST.get("message_text", "")
+    destination_conversation = get_object_or_404(Conversation, id=conversation_id)
+    Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
+    return redirect(conversation, conversation_id)
