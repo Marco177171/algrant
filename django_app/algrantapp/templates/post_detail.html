@@ -3,14 +3,17 @@
 {% block main %}
     <h6>post detail</h6>
     <div class="divider"></div>
-    <a href="{% url 'user_profile' username=post.created_by.username %}">{{post.created_by}}</a>
-    <span>{{post.date_time}}</span>
-    <h5>{{post.content}}</h5>
+    <a href="{% url 'user_profile' username=this_post.created_by.username %}">{{this_post.created_by}}</a>
+    {% if is_mine is True %}
+    <a href="{% url 'delete_post' post_id=this_post.id %}">Delete post</a>
+    {% endif %}
+    <span>{{this_post.date_time}}</span>
+    <h5>{{this_post.content}}</h5>
     <div class="card">
         <form action="{% url 'new_comment' %}" method="post">
             {% csrf_token %}
             <input type="text" name="comment_content" placeholder="write a comment..." required>
-            <input type="hidden" name="post_id" value="{{post.id}}">
+            <input type="hidden" name="post_id" value="{{this_post.id}}">
             <button class="success" type="submit">comment</button>
         </form>
     </div>
@@ -26,9 +29,4 @@
         <h3>no comments yet</h3>
     {% endif %}
     <a href="{% url 'index' %}">Back to index</a>
-{% endblock %}
-
-{% block explorer %}
-<a href="{% url 'index' %}">Index</a>
-<a href="{% url 'all_users' %}">Algrant people</a>
 {% endblock %}
