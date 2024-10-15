@@ -6,6 +6,11 @@
         {% for conversation in conversations %}
             <div class="divider"></div>
             <a href="{% url 'conversation' conversation_id=conversation.id %}">{{conversation.conversation_name}}</a>
+            {% for participant in conversation.participants.all %}
+                <span>{{ participant.username }}</span>
+            {% empty %}
+                <span>No participants in this conversation.</span>
+            {% endfor %}
         {% endfor %}
     {% else %}
         <div class="divider"></div>
