@@ -38,6 +38,10 @@ urlpatterns = [
     path('block_user/<int:user_to_block_id>', views.block_user, name='block_user'),
     path('delete_friendship/<int:to_user_id>', views.delete_friendship, name='delete_friendship'),
     path('accept_friendship_request/<int:friendship_request_id>', views.accept_friendship_request, name='accept_friendship_request'),
+    # CHATS
+    path('my_conversations', views.my_conversations, name='my_conversations'),
+    path('my_conversations/<str:conversation_id>', views.conversation, name='conversation'), # channels
+    path('new_message/<int:conversation_id>', views.new_message, name='new_message'),
     # NOTIFICATIONS
     path('notifications', views.notifications, name='notifications'),
     # USER INTERFACE
