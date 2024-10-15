@@ -1,13 +1,14 @@
 {% extends './base.html' %}
 
 {% block main %}
-    <h1>Your chats</h1>
+    <span>conversations</span>
     {% if conversations %}
         {% for conversation in conversations %}
             <div class="divider"></div>
             <a href="{% url 'conversation' conversation_id=conversation.id %}">{{conversation.conversation_name}}</a>
         {% endfor %}
     {% else %}
+        <div class="divider"></div>
         <h3>No chats yet</h3>
     {% endif %}
 {% endblock %}
