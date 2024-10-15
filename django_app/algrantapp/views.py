@@ -81,25 +81,31 @@ def new_post(request):
     post_content = request.POST.get("post_content", "")
     this_post = Post.objects.create(content=post_content, created_by=request.user)
     context = {
-        'post': this_post,
+        'this_post': this_post,
+        'is_mine': True,
     }
     return render(request, "post_detail.html", context)
 
 @login_required
 def delete_post(request, post_id):
-    Post.objects.delete(id=post_id)
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
     context = {
         'message': 'The post and all related comments were successfully erased',
     }
-    return redirect("message.html", context)
+    return render(request, "message.html", context)
 
 @login_required
 def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    comments = Comment.objects.filter(post=post).order_by('-id')
+    this_post = get_object_or_404(Post, id=post_id)
+    is_mine = False
+    if request.user == this_post.created_by:
+        is_mine = True
+    comments = Comment.objects.filter(post=this_post).order_by('-id')
     context = {
-        'post': post,
-        'comments': comments
+        'this_post': this_post,
+        'is_mine': is_mine,
+        'comments': comments,
     }
     return render(request, "post_detail.html", context)
 
