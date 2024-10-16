@@ -2,6 +2,11 @@
 
 {% block main %}
     <span>conversations</span>
+    <form action="{% url 'new_conversation' %}" method="post">
+        {% csrf_token %}
+        <input class="search" type="text" name="conversation_name" placeholder="Conversation name" required>
+        <button class="success" type="submit">Create new</button>
+    </form>
     {% if conversations %}
         {% for conversation in conversations %}
             <div class="divider"></div>

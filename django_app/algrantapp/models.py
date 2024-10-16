@@ -34,6 +34,7 @@ class Notification (models.Model):
         return self.content
 
 class Conversation(models.Model):
+    admin_id = models.IntegerField()
     conversation_name = models.TextField(max_length=128, default='chat')
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL)
     created_at = models.DateTimeField(auto_now_add=True)

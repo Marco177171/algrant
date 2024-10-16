@@ -297,6 +297,19 @@ def conversation(request, conversation_id):
     return render(request, 'conversation.html', context)
 
 @login_required
+def new_conversation(request):
+    conversation_name = request.POST.get("conversation_name", "")
+    new_conversation = Conversation.objects.create(
+        admin_id = request.user.id,
+        conversation_name = conversation_name,
+    )
+    new_conversation.participants.add(request.user)
+    context = {
+        'conversation': new_conversation
+    }
+    return render(request, 'conversation.html', context)
+
+@login_required
 def new_message(request, conversation_id):
     message_text = request.POST.get("message_text", "")
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)

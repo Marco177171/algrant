@@ -2,3 +2,4 @@
 docker-compose.yml
 update.sh
 pullAndTrigger.sh
+todo.yaml
