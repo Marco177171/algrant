@@ -20,6 +20,8 @@
 <h3>{{ user.username }}</h3>
 <a href="{% url 'user_logout' %}">Logout</a>
 <a href="{% url 'password_change' %}">Change password</a>
+<div class="divider"></div>
+<h5>latest posts</h5>
 {% for post in posts %}
     <div class="divider"></div>
     <span>{{post.date_time}}</span>

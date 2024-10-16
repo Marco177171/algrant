@@ -42,6 +42,7 @@ urlpatterns = [
     path('my_conversations', views.my_conversations, name='my_conversations'),
     path('my_conversations/<str:conversation_id>', views.conversation, name='conversation'), # channels
     path('new_conversation', views.new_conversation, name='new_conversation'),
+    path('delete_conversation', views.delete_conversation, name='delete_conversation'),
     path('new_message/<int:conversation_id>', views.new_message, name='new_message'),
     # NOTIFICATIONS
     path('notifications', views.notifications, name='notifications'),
