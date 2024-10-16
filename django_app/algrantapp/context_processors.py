@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.contrib.auth.models import User
-from .models import Comment, Friendship
+from .models import Comment, Conversation, Message, Friendship
 
 def get_my_friends(request):
     if request.user.is_authenticated:
@@ -37,6 +37,23 @@ def notification_context(request):
             }
     else:
         return {
-            'unseen_friendship_requests': [],
-            'unseen_comments': []
+            'unseen_friendship_requests': '0',
+            'unseen_comments': '0'
+        }
+    
+def notification_context(request):
+    if request.user.is_authenticated:
+        conversations = Conversation.objects.filter(
+            Q(participants=request.user)
+        )
+        unseen_messages = Message.objects.filter(
+            conversation__in = conversations,
+            seen = False,
+        ).count()
+        return {
+                'unseen_messages': unseen_messages,
+            }
+    else:
+        return {
+            'unseen_messages': '',
         }
