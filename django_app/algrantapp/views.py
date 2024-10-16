@@ -310,6 +310,16 @@ def new_conversation(request):
     return render(request, 'conversation.html', context)
 
 @login_required
+def delete_conversation(request):
+    conversation_id = request.POST.get("conversation_id", "")
+    conversation_to_delete = get_object_or_404(Conversation, id=conversation_id)
+    conversation_to_delete.delete()
+    context = {
+        'message': 'The conversation and all it\'s contents were successfully erased'
+    }
+    return render(request, 'message.html', context)
+
+@login_required
 def new_message(request, conversation_id):
     message_text = request.POST.get("message_text", "")
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)

@@ -1,7 +1,7 @@
 {% extends './base.html' %}
 
 {% block main %}
-    <span>conversations</span>
+    <h6>conversations</h6>
     <form action="{% url 'new_conversation' %}" method="post">
         {% csrf_token %}
         <input class="search" type="text" name="conversation_name" placeholder="Conversation name" required>
@@ -12,10 +12,21 @@
             <div class="divider"></div>
             <a href="{% url 'conversation' conversation_id=conversation.id %}">{{conversation.conversation_name}}</a>
             {% for participant in conversation.participants.all %}
-                <span>{{ participant.username }}</span>
+            <span>{{ participant.username }}</span>
             {% empty %}
-                <span>No participants in this conversation.</span>
+            <span>No participants in this conversation.</span>
             {% endfor %}
+            {% if request.user.id is conversation.admin_id %}
+            <div style="text-align: right;">
+                <span>admin moves: </span>
+                <form action="{% url 'delete_conversation' %}" id="delete-conversation-form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="conversation_id" value="{{conversation.id}}">
+                    <!-- <button class="danger" type="submit">Delete</button> -->
+                    <a href="#" onclick="document.getElementById('delete-conversation-form').submit(); return false;">Delete</a>
+                </form>
+            </div>
+            {% endif %}
         {% endfor %}
     {% else %}
         <div class="divider"></div>
