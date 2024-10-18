@@ -1,0 +1,35 @@
+{% extends './base.html' %}
+
+{% block main %}
+    <h6>algrant search</h6>
+    <div class="divider"></div>
+    <h3>results for "{{search_text}}"</h3>
+    {% if conversations %}
+        {% for conversation in conversations %}
+        <div class="divider"></div>
+        <a href="{% url 'conversation' conversation_id=conversation.id %}">{{conversation.conversation_name}}</a>
+        {% for participant in conversation.participants.all %}
+        <span>{{ participant.username }}</span>
+        {% empty %}
+        <span>No participants in this conversation.</span>
+        {% endfor %}
+        <div style="text-align: right;">
+            <a href="{% url 'chat_settings' conversation_id=conversation.id %}">Settings</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Your research didn't produce any result</p>
+    {% endif %}
+{% endblock %}
+
+{% block main_bottom %}
+<form action="{% url 'conversation_search_results' %}" method="post">
+    {% csrf_token %}
+    <input class="search" type="text" name="search_text" placeholder="Search in conversations" required>
+</form>
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">Index</a>
+<a href="{% url 'all_users' %}">People</a>
+{% endblock %}
