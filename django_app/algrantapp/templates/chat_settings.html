@@ -5,7 +5,7 @@
 <div class="divider"></div>
 
 <!-- ADD PARTICIPANTS TO CONVERSATION -->
-{% if conversation.admin_id == request.user.id %}
+    {% if conversation.admin_id == request.user.id %}
     <h3>Admin dashboard</h3>
     <h4>Add participants</h4>
     <div class="card">
@@ -34,13 +34,18 @@
         </form>
     </div>
     <h4>Administration</h4>
-    <div style="text-align: right;">
-        <form action="{% url 'delete_conversation' %}" id="delete-conversation-form" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="conversation_id" value="{{conversation.id}}">
-            <button class="danger" type="submit">Delete conversation</button>
-        </form>
-    </div>
+    <form action="{% url 'delete_conversation' %}" id="delete-conversation-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="conversation_id" value="{{conversation.id}}">
+        <button class="danger" type="submit">Delete conversation</button>
+    </form>
+    {% else %}
+    <h3>Chat settings</h3>
+    <form action="{% url 'leave_conversation' %}" id="leave-conversation-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="conversation_id" value="{{conversation.id}}">
+        <button class="danger" type="submit">Leave conversation</button>
+    </form>
     {% endif %}
 {% endblock %}
 
