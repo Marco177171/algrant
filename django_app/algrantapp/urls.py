@@ -31,7 +31,7 @@ urlpatterns = [
     path('delete_post/<int:post_id>', views.delete_post, name='delete_post'),
     # COMMENTING
     path('new_comment', views.new_comment, name='new_comment'),
-    path('search_results', views.search_results, name='search_results'),
+    path('delete_comment', views.delete_comment, name='delete_comment'),
     # FRIENDSHIP MANAGEMENT
     path('all_users', views.all_users, name='all_users'),
     path('send_friendship_request/<int:to_user_id>', views.send_friendship_request, name='send_friendship_request'),
@@ -45,8 +45,8 @@ urlpatterns = [
     path('delete_conversation', views.delete_conversation, name='delete_conversation'),
     # CHAT SETTINGS
     path('my_conversations/<str:conversation_id>/settings', views.chat_settings, name='chat_settings'),
-    path('my_conversations/<int:conversation_id>/add/', views.add_participants, name='add_participants'),
-    path('my_conversations/<int:conversation_id>/remove/', views.remove_participants, name='remove_participants'),
+    path('my_conversations/<int:conversation_id>/add', views.add_participants, name='add_participants'),
+    path('my_conversations/<int:conversation_id>/remove', views.remove_participants, name='remove_participants'),
     path('leave_conversation', views.leave_conversation, name='leave_conversation'),
     # MESSAGES
     path('new_message/<int:conversation_id>', views.new_message, name='new_message'),
@@ -55,4 +55,5 @@ urlpatterns = [
     path('notifications', views.notifications, name='notifications'),
     # USER INTERFACE
     path('message', views.message, name='message'), # get a message when something happens
+    path('search_results', views.search_results, name='search_results'),
 ]
