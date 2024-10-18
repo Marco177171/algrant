@@ -56,7 +56,6 @@
     </form>
 {% endblock %}
 
-<div class="explorer">
-    <a href="{% url 'index' %}">Index</a>
-    <a href="{% url 'all_users' %}">Algrant people</a>
-</div>
+{% block explorer %}
+<a href="{% url 'conversation' conversation_id=conversation.id %}">Back to chat</a>
+{% endblock %}
