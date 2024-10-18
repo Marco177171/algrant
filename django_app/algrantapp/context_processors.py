@@ -33,15 +33,15 @@ def notification_context(request):
             ).count()
         return {
                 'unseen_friendship_requests': unseen_friendship_requests,
-                'unseen_comments': unseen_comments
+                'unseen_comments': unseen_comments,
             }
     else:
         return {
             'unseen_friendship_requests': '0',
-            'unseen_comments': '0'
+            'unseen_comments': '0',
         }
     
-def notification_context(request):
+def conversations_context(request):
     if request.user.is_authenticated:
         conversations = Conversation.objects.filter(
             Q(participants=request.user)
