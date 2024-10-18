@@ -1,0 +1,63 @@
+{% extends './conversation_base.html' %}
+
+{% block main %}
+<h6>{{conversation.conversation_name}}/Settings</h6>
+<div class="divider"></div>
+
+<!-- ADD PARTICIPANTS TO CONVERSATION -->
+{% if conversation.admin_id == request.user.id %}
+    <h3>Admin dashboard</h3>
+    
+    <!-- Add participants -->
+    <form method="post" action="{% url 'add_participants' conversation.id %}">
+        {% csrf_token %}
+        <label for="friends">Add participants:</label>
+        <select name="friends" id="friends" multiple>
+            {% for friend in my_friends_list %}
+            <option value="{{friend.id}}">{{friend.username}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add to conversation</button>
+    </form>
+
+    <!-- Remove participants -->
+    <form method="post" action="{% url 'remove_participants' conversation.id %}">
+        {% csrf_token %}
+        <label for="participants">Remove participants:</label>
+        <select name="participants" id="participants" multiple>
+            {% for participant in conversation.participants.all %}
+                {% if participant != request.user %}
+                <option value="{{participant.id}}">{{participant.username}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <button type="submit">Remove from conversation</button>
+    </form>
+{% endif %}
+
+<h4>participants</h4>
+{% for participant in conversation.participants.all %}
+<span>{{ participant.username }}</span>
+{% empty %}
+<span>No participants in this conversation.</span>
+<form action="{% url 'remove_user_from_conversation' %}" id="remove-user-form" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="conversation_id" value="{{conversation.id}}">
+    <input type="hidden" name="user_id" value="{{participant.id}}">
+    <a href="#" onclick="document.getElementById('remove-user-form').submit(); return false;">Remove</a>
+</form>
+{% endfor %}
+
+{% endblock %}
+
+{% block main_bottom %}
+    <form action="{% url 'new_message' conversation_id=conversation.id %}" method="post">
+        {% csrf_token %}
+        <input class="search" type="text" name="message_text" placeholder="Write your message here" required>
+    </form>
+{% endblock %}
+
+<div class="explorer">
+    <a href="{% url 'index' %}">Index</a>
+    <a href="{% url 'all_users' %}">Algrant people</a>
+</div>
