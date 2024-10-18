@@ -10,11 +10,11 @@
                     <span>{{message.timestamp}}</span>
                     <p>{{message.content}}</p>
                     <span>message moves:</span>
-                    <form action="{% url 'delete_message' %}" id="delete-message-form" method="post">
+                    <form action="{% url 'delete_message' %}" id="delete-message-form-{{ message.id }}" method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="message_id" value="{{message.id}}">
-                        <input type="hidden" name="conversation_id" value="{{conversation.id}}">
-                        <a href="#" onclick="document.getElementById('delete-message-form').submit(); return false;">Delete</a>
+                        <input type="hidden" name="message_id" value="{{ message.id }}">
+                        <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+                        <a href="#" onclick="document.getElementById('delete-message-form-{{ message.id }}').submit(); return false;">Delete</a>
                     </form>
                 </div>
             {% else %}
@@ -25,7 +25,7 @@
             {% endif %}
         {% endfor %}
     {% else %}
-        <h3>No messages yet</h3>
+    <h3>No messages yet</h3>
     {% endif %}
 {% endblock %}
 

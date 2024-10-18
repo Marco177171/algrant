@@ -351,12 +351,12 @@ def delete_message(request):
     message_id = request.POST.get("message_id", "")
     conversation_id = request.POST.get("conversation_id", "")
     message_to_delete = get_object_or_404(Message, id=message_id)
-    if request.user is message_to_delete.sender:
+    if request.user == message_to_delete.sender:
         message_to_delete.content = '** message deleted **'
         message_to_delete.save()
         return redirect(conversation, conversation_id)
     else:
         context = {
-            'mmessage': 'You don\'t have the rights to erase the selected message'
+            'message': 'You don\'t have the rights to erase the selected message'
         }
-    return render(request, 'message.html', context)
+        return render(request, 'message.html', context)
