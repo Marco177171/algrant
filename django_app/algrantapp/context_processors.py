@@ -55,5 +55,5 @@ def conversations_context(request):
             }
     else:
         return {
-            'unseen_messages': '',
+            'unseen_messages': '0',
         }
