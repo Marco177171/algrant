@@ -1,7 +1,6 @@
 {% extends './conversation_base.html' %}
 
 {% block main %}
-<div id="chat-container">
     {% if messages %}
         {% for message in messages %}
             {% if message.sender == request.user %}
@@ -29,8 +28,6 @@
     <h3>No messages yet</h3>
     <p>You can start writing or add people to the chat from <a href="{% url 'chat_settings' conversation_id=conversation.id %}">chat settings</a></p>
     {% endif %}
-    <a name="pointToScrollTo"></a>
-</div>
 {% endblock %}
 
 {% block main_bottom %}
@@ -42,21 +39,7 @@
 
 <div class="explorer">
     {% block explorer %}
-    <a href="{% url 'chat_settings' conversation_id=conversation.id %}">Chat Settings</a>
+    <a href="{% url 'my_conversations' %}">Back to chats</a>
+    <a href="{% url 'chat_settings' conversation_id=conversation.id %}">Chat settings</a>
     {% endblock %}
 </div>
-
-<script>
-    // Scroll to the bottom when the DOM content is fully loaded
-    document.addEventListener("DOMContentLoaded", function() {
-        scrollToBottom();
-    });
-
-    // Scroll to the bottom function
-    function scrollToBottom() {
-        var chatContainer = document.getElementById("chat-container");
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    // Optionally, you can call scrollToBottom() after new messages are added dynamically
-</script>

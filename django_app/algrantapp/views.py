@@ -152,6 +152,20 @@ def search_results(request):
     }
     return render(request, "search_results.html", context)
 
+@login_required
+def conversation_search_results(request):
+    search_text = request.POST.get("search_text", "")
+    conversations = Conversation.objects.filter(
+        Q(conversation_name__icontains=search_text) |
+        Q(participants__username__icontains=search_text)
+    ).filter(
+        participants=request.user
+    ).distinct()
+    context = {
+        'search_text': search_text,
+        'conversations': conversations,
+    }
+    return render(request, "conversation_search_results.html", context)
 # user interface
 
 @login_required
@@ -251,12 +265,12 @@ def get_my_friendship_requests(request):
 # @login_required
 # def visualize_notifications(received_comments, friendship_requests):
 #     for friendship in friendship_requests:
-#         if friendship.seen_by_to_user == False:
-#             friendship.seen_by_to_user=True
+#         if friendship.seen == False:
+#             friendship.seen=True
 #             friendship.save()
 #     for comment in received_comments:
-#         if comment.seen_by_to_user == False:
-#             comment.seen_by_to_user=True
+#         if comment.seen == False:
+#             comment.seen=True
 #             comment.save()
 #     return
 
@@ -280,6 +294,7 @@ def notifications(request):
             'from_user_username': from_user.username
         })
     received_comments = get_comments_on_my_posts(request)
+    # visualize_notifications(received_comments, friendship_requests)
     for friendship in friendship_requests:
         if friendship.seen == False:
             friendship.seen = True
@@ -306,6 +321,10 @@ def my_conversations(request):
 def conversation(request, conversation_id):
     conversation = get_object_or_404(Conversation, id=conversation_id)
     messages = Message.objects.filter(conversation=conversation).order_by('id')
+    for message in messages:
+        if message.seen == False:
+            message.seen = True
+            message.save()
     context = {
         'conversation': conversation,
         'messages': messages,

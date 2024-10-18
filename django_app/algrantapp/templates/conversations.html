@@ -16,16 +16,6 @@
             {% empty %}
             <span>No participants in this conversation.</span>
             {% endfor %}
-            <!-- {% if request.user.id is conversation.admin_id %}
-            <div style="text-align: right;">
-                <span>admin moves: </span>
-                <form action="{% url 'delete_conversation' %}" id="delete-conversation-form" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="conversation_id" value="{{conversation.id}}">
-                    <a href="#" onclick="document.getElementById('delete-conversation-form').submit(); return false;">Delete</a>
-                </form>
-            </div>
-            {% endif %} -->
             <div style="text-align: right;">
                 <a href="{% url 'chat_settings' conversation_id=conversation.id %}">Settings</a>
             </div>
@@ -34,4 +24,16 @@
         <div class="divider"></div>
         <h3>No chats yet</h3>
     {% endif %}
+{% endblock %}
+
+{% block main_bottom %}
+<form action="{% url 'conversation_search_results' %}" method="post">
+    {% csrf_token %}
+    <input class="search" type="text" name="search_text" placeholder="Search in conversations" required>
+</form>
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">Index</a>
+<a href="{% url 'all_users' %}">People</a>
 {% endblock %}
