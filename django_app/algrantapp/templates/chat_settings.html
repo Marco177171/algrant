@@ -35,7 +35,6 @@
     </div>
     <h4>Administration</h4>
     <div style="text-align: right;">
-        <span>admin moves: </span>
         <form action="{% url 'delete_conversation' %}" id="delete-conversation-form" method="post">
             {% csrf_token %}
             <input type="hidden" name="conversation_id" value="{{conversation.id}}">
