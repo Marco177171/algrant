@@ -122,6 +122,22 @@ def new_comment(request):
         Comment.objects.create(post=post, content=comment_content, created_by=request.user, seen=False)
     return redirect(post_detail, post_id)
 
+@login_required
+def delete_comment(request):
+    comment_id = request.POST.get("comment_id", "")
+    comment_to_erase = get_object_or_404(Comment, id=comment_id)
+    if comment_to_erase.created_by == request.user:
+        comment_to_erase.delete()
+        context = {
+            'message': 'Your comment was successfully removed'
+        }
+        return render(request, 'message.html', context)
+    else:
+        context = {
+            'message': 'You do not have the right\'s to remove another user\'s comment'
+        }
+        return render(request, 'message.html', context)
+
 # search engine
 
 @login_required

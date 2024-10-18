@@ -4,7 +4,7 @@
     <h6>post detail</h6>
     <div class="divider"></div>
     <a href="{% url 'user_profile' username=this_post.created_by.username %}">{{this_post.created_by}}</a>
-    {% if is_mine is True %}
+    {% if request.user == this_post.created_by %}
     <a href="{% url 'delete_post' post_id=this_post.id %}">Delete post</a>
     {% endif %}
     <span>{{this_post.date_time}}</span>
@@ -24,6 +24,16 @@
             <a href="{% url 'user_profile' username=comment.created_by.username %}">{{comment.created_by}}</a>
             <span>{{comment.date_time}}</span>
             <p>{{comment.content}}</p>
+            {% if request.user == comment.created_by %}
+            <div style="text-align: right;">
+                <span>comment moves:</span>
+                <form action="{% url 'delete_comment' %}" id="delete-comment-form-{{ comment.id }}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                    <a href="#" onclick="document.getElementById('delete-comment-form-{{ comment.id }}').submit(); return false;">Delete comment</a>
+                </form>
+            </div>
+            {% endif %}
         {% endfor %}
     {% else %}
         <h3>no comments yet</h3>
