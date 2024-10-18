@@ -351,7 +351,7 @@ def delete_message(request):
     message_id = request.POST.get("message_id", "")
     conversation_id = request.POST.get("conversation_id", "")
     message_to_delete = get_object_or_404(Message, id=message_id)
-    if request.user is message_to_delete.created_by:
+    if request.user is message_to_delete.sender:
         message_to_delete.content = '** message deleted **'
         message_to_delete.save()
         return redirect(conversation, conversation_id)
