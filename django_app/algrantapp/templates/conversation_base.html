@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/CarbonDesignSystem.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'icons/PulsarBlackBorder.png' %}">
+    <link rel="manifest" href="{% static 'manifest/algrant.webmanifest' %}" />
+    <title>algrant</title>
+</head>
+<body>
+    <header>
+        <p>{{conversation.conversation_name}}</p>
+    </header>
+    <nav>
+        <a href="{% url 'index' %}">Index</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" style="float:right">{{user.username}}</a>
+        <a href="{% url 'my_conversations' %}" style="float: right;">Chats: {{unseen_messages}}</a>
+        <a href="{% url 'notifications' %}" style="float:right">Notifications {{unseen_friendship_requests}} | {{unseen_comments}}</a>
+        {% endif %}
+    </nav>
+    <div class="sideBar">
+        <p>people | <a href="{% url 'all_users' %}">See all</a></p>
+        <div class="sideBarSub">
+            {% if my_friends_list %}
+            <ul>
+                {% for friend in my_friends_list %}
+                <li>
+                    <a href="{% url 'user_profile' username=friend.username %}">{{friend.username}}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>no friends yet</p>
+            {% endif %}
+        </div>
+        <div class="sideBarBottom">
+            <div class="divider"></div>
+            <a href="https://studiopulsar.pro">Studio Pulsar</a>
+            <p>we like it simple</p>
+        </div>
+    </div>
+    <main>
+        {% block main %}
+        {% endblock %}
+    </main>
+    <div class="main_bottom">
+        {% block main_bottom %}
+        {% endblock %}
+    </div>
+    <div class="explorer">
+        {% block explorer %}
+        {% endblock %}
+    </div>
+</body>
+</html>

@@ -297,6 +297,26 @@ def conversation(request, conversation_id):
     return render(request, 'conversation.html', context)
 
 @login_required
+def conversation_admin_dashboard(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    messages = Message.objects.filter(conversation=conversation).order_by('id')
+    context = {
+        'conversation': conversation,
+        'messages': messages,
+    }
+    return render(request, 'conversation_admin_dashboard.html', context)
+
+# @login_required
+# def add_users_to_conversation(request):
+#     conversation_id = request.POST.get("conversation_id", "")
+#     conversation = request.POST.get("")
+#     people = User.objects.all()
+#     context = {
+#         'people': people,
+#     }
+#     return render(request, 'conversation_admin_dashboard.html', context)
+
+@login_required
 def new_conversation(request):
     conversation_name = request.POST.get("conversation_name", "")
     new_conversation = Conversation.objects.create(
@@ -325,3 +345,18 @@ def new_message(request, conversation_id):
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)
     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
     return redirect(conversation, conversation_id)
+
+@login_required
+def delete_message(request):
+    message_id = request.POST.get("message_id", "")
+    conversation_id = request.POST.get("conversation_id", "")
+    message_to_delete = get_object_or_404(Message, id=message_id)
+    if request.user is message_to_delete.created_by:
+        message_to_delete.content = '** message deleted **'
+        message_to_delete.save()
+        return redirect(conversation, conversation_id)
+    else:
+        context = {
+            'mmessage': 'You don\'t have the rights to erase the selected message'
+        }
+    return render(request, 'message.html', context)

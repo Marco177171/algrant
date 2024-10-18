@@ -1,77 +1,43 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/CarbonDesignSystem.css' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'icons/PulsarBlackBorder.png' %}">
-    <link rel="manifest" href="{% static 'manifest/algrant.webmanifest' %}" />
-    <title>algrant</title>
-</head>
-<body>
-    <header>
-        <p>{{conversation.conversation_name}}</p>
-    </header>
-    <nav>
-        <a href="{% url 'index' %}">Index</a>
-        {% if user.is_authenticated %}
-        <a href="{% url 'profile' %}" style="float:right">{{user.username}}</a>
-        <a href="{% url 'my_conversations' %}" style="float: right;">Chats: {{unseen_messages}}</a>
-        <a href="{% url 'notifications' %}" style="float:right">Notifications {{unseen_friendship_requests}} | {{unseen_comments}}</a>
-        {% endif %}
-    </nav>
-    <div class="sideBar">
-        <p>people | <a href="{% url 'all_users' %}">See all</a></p>
-        <div class="sideBarSub">
-            {% if my_friends_list %}
-            <ul>
-                {% for friend in my_friends_list %}
-                <li>
-                    <a href="{% url 'user_profile' username=friend.username %}">{{friend.username}}</a>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p>no friends yet</p>
-            {% endif %}
-        </div>
-        <div class="sideBarBottom">
-            <div class="divider"></div>
-            <a href="https://studiopulsar.pro">Studio Pulsar</a>
-            <p>we like it simple</p>
-        </div>
-    </div>
-    <main>
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.sender == request.user %}
-                    <div class="divider"></div>
-                    <div style="text-align: right;">
-                        <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
-                        <span>{{message.timestamp}}</span>
-                        <p>{{message.content}}</p>
-                    </div>
-                {% else %}
-                    <div class="divider"></div>
+{% extends './conversation_base.html' %}
+
+{% block main %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.sender == request.user %}
+                <div class="divider"></div>
+                <div style="text-align: right;">
                     <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
                     <span>{{message.timestamp}}</span>
                     <p>{{message.content}}</p>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <h3>No messages yet</h3>
-        {% endif %}
-    </main>
-    <div class="main_bottom">
-        <form action="{% url 'new_message' conversation_id=conversation.id %}" method="post">
-            {% csrf_token %}
-            <input class="search" type="text" name="message_text" placeholder="Write your message here" required>
-        </form>
-    </div>
-    <div class="explorer">
-        <a href="{% url 'index' %}">Index</a>
-        <a href="{% url 'all_users' %}">Algrant people</a>
-    </div>
-</body>
-</html>
+                    <span>message moves:</span>
+                    <form action="{% url 'delete_message' %}" id="delete-message-form" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="message_id" value="{{message.id}}">
+                        <input type="hidden" name="conversation_id" value="{{conversation.id}}">
+                        <a href="#" onclick="document.getElementById('delete-message-form').submit(); return false;">Delete</a>
+                    </form>
+                </div>
+            {% else %}
+                <div class="divider"></div>
+                <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
+                <span>{{message.timestamp}}</span>
+                <p>{{message.content}}</p>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <h3>No messages yet</h3>
+    {% endif %}
+{% endblock %}
+
+{% block main_bottom %}
+    <form action="{% url 'new_message' conversation_id=conversation.id %}" method="post">
+        {% csrf_token %}
+        <input class="search" type="text" name="message_text" placeholder="Write your message here" required>
+    </form>
+{% endblock %}
+
+<div class="explorer">
+    {% block explorer %}
+    <a href="{% url 'conversation_admin_dashboard' conversation_id=conversation.id %}">Chat Settings</a>
+    {% endblock %}
+</div>
