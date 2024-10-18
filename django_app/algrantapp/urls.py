@@ -41,9 +41,13 @@ urlpatterns = [
     # CHATS
     path('my_conversations', views.my_conversations, name='my_conversations'),
     path('my_conversations/<str:conversation_id>', views.conversation, name='conversation'), # channels
-    path('my_conversations/<str:conversation_id>/admin_dashboard', views.conversation_admin_dashboard, name='conversation_admin_dashboard'),
     path('new_conversation', views.new_conversation, name='new_conversation'),
     path('delete_conversation', views.delete_conversation, name='delete_conversation'),
+    # CHAT SETTINGS
+    path('my_conversations/<str:conversation_id>/settings', views.chat_settings, name='chat_settings'),
+    path('my_conversations/<int:conversation_id>/add/', views.add_participants, name='add_participants'),
+    path('my_conversations/<int:conversation_id>/remove/', views.remove_participants, name='remove_participants'),
+    # MESSAGES
     path('new_message/<int:conversation_id>', views.new_message, name='new_message'),
     path('delete_message', views.delete_message, name='delete_message'),
     # NOTIFICATIONS

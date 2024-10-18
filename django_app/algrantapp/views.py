@@ -297,24 +297,34 @@ def conversation(request, conversation_id):
     return render(request, 'conversation.html', context)
 
 @login_required
-def conversation_admin_dashboard(request, conversation_id):
+def chat_settings(request, conversation_id):
     conversation = get_object_or_404(Conversation, id=conversation_id)
     messages = Message.objects.filter(conversation=conversation).order_by('id')
     context = {
         'conversation': conversation,
         'messages': messages,
     }
-    return render(request, 'conversation_admin_dashboard.html', context)
+    return render(request, 'chat_settings.html', context)
 
-# @login_required
-# def add_users_to_conversation(request):
-#     conversation_id = request.POST.get("conversation_id", "")
-#     conversation = request.POST.get("")
-#     people = User.objects.all()
-#     context = {
-#         'people': people,
-#     }
-#     return render(request, 'conversation_admin_dashboard.html', context)
+@login_required
+def add_participants(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    if request.user.id == conversation.admin_id and request.method == "POST":
+        friend_ids = request.POST.getlist('friends')  # Get list of selected friends
+        for friend_id in friend_ids:
+            friend = get_object_or_404(User, id=friend_id)
+            conversation.participants.add(friend)  # Add each friend to the conversation
+        return redirect('conversation', conversation_id=conversation_id)  # Redirect back to conversation view
+
+@login_required
+def remove_participants(request, conversation_id):
+    conversation = get_object_or_404(Conversation, id=conversation_id)
+    if request.user.id == conversation.admin_id and request.method == "POST":
+        participant_ids = request.POST.getlist('participants')  # Get list of participants to remove
+        for participant_id in participant_ids:
+            participant = get_object_or_404(User, id=participant_id)
+            conversation.participants.remove(participant)  # Remove each participant
+        return redirect('conversation', conversation_id=conversation_id)  # Redirect back to conversation view
 
 @login_required
 def new_conversation(request):

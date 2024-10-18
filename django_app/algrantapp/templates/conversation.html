@@ -38,6 +38,6 @@
 
 <div class="explorer">
     {% block explorer %}
-    <a href="{% url 'conversation_admin_dashboard' conversation_id=conversation.id %}">Chat Settings</a>
+    <a href="{% url 'chat_settings' conversation_id=conversation.id %}">Chat Settings</a>
     {% endblock %}
 </div>
