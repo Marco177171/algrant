@@ -7,47 +7,42 @@
 <!-- ADD PARTICIPANTS TO CONVERSATION -->
 {% if conversation.admin_id == request.user.id %}
     <h3>Admin dashboard</h3>
-    
-    <!-- Add participants -->
-    <form method="post" action="{% url 'add_participants' conversation.id %}">
-        {% csrf_token %}
-        <label for="friends">Add participants:</label>
-        <select name="friends" id="friends" multiple>
-            {% for friend in my_friends_list %}
-            <option value="{{friend.id}}">{{friend.username}}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Add to conversation</button>
-    </form>
-
-    <!-- Remove participants -->
-    <form method="post" action="{% url 'remove_participants' conversation.id %}">
-        {% csrf_token %}
-        <label for="participants">Remove participants:</label>
-        <select name="participants" id="participants" multiple>
-            {% for participant in conversation.participants.all %}
-                {% if participant != request.user %}
-                <option value="{{participant.id}}">{{participant.username}}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-        <button type="submit">Remove from conversation</button>
-    </form>
-{% endif %}
-
-<h4>participants</h4>
-{% for participant in conversation.participants.all %}
-<span>{{ participant.username }}</span>
-{% empty %}
-<span>No participants in this conversation.</span>
-<form action="{% url 'remove_user_from_conversation' %}" id="remove-user-form" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="conversation_id" value="{{conversation.id}}">
-    <input type="hidden" name="user_id" value="{{participant.id}}">
-    <a href="#" onclick="document.getElementById('remove-user-form').submit(); return false;">Remove</a>
-</form>
-{% endfor %}
-
+    <h4>Add participants</h4>
+    <div class="card">
+        <form method="post" action="{% url 'add_participants' conversation.id %}">
+            {% csrf_token %}
+            <select name="friends" id="friends" multiple>
+                {% for friend in my_friends_list %}
+                <option value="{{friend.id}}">{{friend.username}}</option>
+                {% endfor %}
+            </select>
+            <button class="success" type="submit">Add to conversation</button>
+        </form>
+    </div>
+    <h4>Remove participants</h4>
+    <div class="card">
+        <form method="post" action="{% url 'remove_participants' conversation.id %}">
+            {% csrf_token %}
+            <select name="participants" id="participants" multiple>
+                {% for participant in conversation.participants.all %}
+                    {% if participant != request.user %}
+                    <option value="{{participant.id}}">{{participant.username}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <button class="success" type="submit">Remove from conversation</button>
+        </form>
+    </div>
+    <h4>Administration</h4>
+    <div style="text-align: right;">
+        <span>admin moves: </span>
+        <form action="{% url 'delete_conversation' %}" id="delete-conversation-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="conversation_id" value="{{conversation.id}}">
+            <button class="danger" type="submit">Delete conversation</button>
+        </form>
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block main_bottom %}

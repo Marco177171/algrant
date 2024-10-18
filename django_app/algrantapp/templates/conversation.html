@@ -26,6 +26,7 @@
         {% endfor %}
     {% else %}
     <h3>No messages yet</h3>
+    <p>You can start writing or add people to the chat from <a href="{% url 'chat_settings' conversation_id=conversation.id %}">chat settings</a></p>
     {% endif %}
 {% endblock %}
 
