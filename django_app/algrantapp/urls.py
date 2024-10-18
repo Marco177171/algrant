@@ -47,6 +47,7 @@ urlpatterns = [
     path('my_conversations/<str:conversation_id>/settings', views.chat_settings, name='chat_settings'),
     path('my_conversations/<int:conversation_id>/add/', views.add_participants, name='add_participants'),
     path('my_conversations/<int:conversation_id>/remove/', views.remove_participants, name='remove_participants'),
+    path('leave_conversation', views.leave_conversation, name='leave_conversation'),
     # MESSAGES
     path('new_message/<int:conversation_id>', views.new_message, name='new_message'),
     path('delete_message', views.delete_message, name='delete_message'),
