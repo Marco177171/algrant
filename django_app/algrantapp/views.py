@@ -101,7 +101,7 @@ def post_detail(request, post_id):
     is_mine = False
     if request.user == this_post.created_by:
         is_mine = True
-    comments = Comment.objects.filter(post=this_post).order_by('-id')
+    comments = Comment.objects.filter(post=this_post).order_by('id')
     context = {
         'this_post': this_post,
         'is_mine': is_mine,
