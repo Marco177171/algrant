@@ -6,8 +6,7 @@ COPY . .
 
 RUN pip install django
 RUN pip install psycopg
-# RUN pip install channels
-# RUN pip install channels_redis
+RUN pip install pywebpush
 
 RUN sh wait-for-postgres.sh
 

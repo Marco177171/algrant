@@ -26,12 +26,21 @@ class Friendship (models.Model):
     seen = models.BooleanField(default=False)
     def __str__(self):
         return str(self.from_user_id) + str(self.to_user_id)
-    
+
+# notifications
+
 class Notification (models.Model):
     content = models.CharField(max_length=256)
     seen = models.BooleanField(default=False)
     def __str__(self):
         return self.content
+
+class PushSubscription(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    endpoint = models.TextField()
+    expiration_time = models.DateTimeField(null=True, blank=True)
+    p256dh = models.TextField()
+    auth = models.TextField()
 
 class Conversation(models.Model):
     admin_id = models.IntegerField()

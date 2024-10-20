@@ -1,3 +1,5 @@
+import os
+import json
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django import forms
@@ -6,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 from django.db.models import Q
+from pywebpush import webpush, WebPushException # push notifications
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Account Management
 
@@ -309,6 +314,30 @@ def notifications(request):
     }
     return render(request, 'notifications.html', context)
 
+def send_push_notification(subscription_info, payload):
+    try:
+        webpush(
+            subscription_info=subscription_info,
+            data=payload,
+            vapid_private_key=os.getenv(VAPID_PRIVATE_KEY),
+            vapid_claims={"sub": "mailto:sebastianimarco@proton.me"}
+        )
+    except WebPushException as e:
+        print("Failed to send notification: {}", repr(e))
+
+@csrf_exempt
+def save_subscription(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        subscription = PushSubscription.objects.create(
+            user=request.user,
+            endpoint=data['endpoint'],
+            expiration_time=data.get('expirationTime'),
+            p256dh=data['keys']['p256dh'],
+            auth=data['keys']['auth']
+        )
+        return JsonResponse({'status': 'Subscription saved'})
+
 @login_required
 def my_conversations(request):
     conversations = Conversation.objects.filter(participants=request.user)
@@ -320,7 +349,7 @@ def my_conversations(request):
 @login_required
 def conversation(request, conversation_id):
     conversation = get_object_or_404(Conversation, id=conversation_id)
-    messages = Message.objects.filter(conversation=conversation).order_by('id')
+    messages = Message.objects.filter(conversation=conversation).order_by('id')[:50]
     for message in messages:
         if message.seen == False:
             message.seen = True
@@ -400,6 +429,34 @@ def new_message(request, conversation_id):
     message_text = request.POST.get("message_text", "")
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)
     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
+    
+    # Prepare the payload (notification message)
+    payload = json.dumps({
+        "title": "New message",
+        "body": f"{request.user.username}: {message_text}",
+        "icon": "/static/img/notification-icon.png",  # Path to notification icon
+        "url": f"/conversations/{conversation_id}/"  # URL to redirect the user when clicking the notification
+    })
+
+    # Get the push subscription for the recipient(s)
+    for participant in destination_conversation.participants.exclude(id=request.user.id):  # Exclude the sender
+        try:
+            subscription = PushSubscription.objects.get(user=participant)
+
+            # Prepare the subscription_info
+            subscription_info = {
+                "endpoint": subscription.endpoint,
+                "keys": {
+                    "p256dh": subscription.p256dh,
+                    "auth": subscription.auth,
+                }
+            }
+
+            # Send the push notification
+            send_push_notification(subscription_info, payload)
+
+        except PushSubscription.DoesNotExist:
+            print(f"No subscription info for {participant.username}")
     return redirect(conversation, conversation_id)
 
 @login_required
