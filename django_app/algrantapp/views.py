@@ -329,7 +329,7 @@ def send_push_notification(subscription_info, payload):
 def save_subscription(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        subscription = PushSubscription.objects.create(
+        PushSubscription.objects.create(
             user=request.user,
             endpoint=data['endpoint'],
             expiration_time=data.get('expirationTime'),
