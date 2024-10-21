@@ -78,7 +78,6 @@
     
     function subscribeUser() {
         console.log('Subscribing the user...')
-        registerServiceWorker()
         navigator.serviceWorker.ready.then(function(registration) {
             console.log('Service worker is ready');
             const vapidPublicKey = "{{vapid_public_key}}";
@@ -133,6 +132,13 @@
         }
     }
     return outputArray;
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('../static/push_notifications/service-worker.js')
+    .then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+    }).catch(function(error) {
+        console.error('Service Worker registration failed:', error);
+    });
 }
     
     function urlBase64ToUint8Array(base64String) {
