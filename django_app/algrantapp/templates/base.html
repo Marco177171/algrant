@@ -73,22 +73,20 @@ function subscribeUser() {
     if (Notification.permission === 'granted') {
         console.log('Push notifications already granted');
         // You could call the subscription process here directly
-    } else if (Notification.permission === 'denied') {
-        console.log('Push notifications are denied by the user');
     } else {
         // Request permission from the user
+        console.log('Push notifications are denied by the user');
         Notification.requestPermission().then(function(permission) {
             if (permission === 'granted') {
                 // Proceed with subscribing the user
                 navigator.serviceWorker.ready.then(function(registration) {
                     const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
                     const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-
                     registration.pushManager.subscribe({
                         userVisibleOnly: true,
                         applicationServerKey: convertedVapidKey
                     }).then(function(subscription) {
-                        // Send subscription to your server
+                        console.log('Send subscription to your server');
                         fetch('/save_subscription/', {
                             method: 'POST',
                             headers: {
