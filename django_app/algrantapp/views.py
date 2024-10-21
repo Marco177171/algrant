@@ -286,7 +286,7 @@ def get_user_by_id(user_id):
 
 @login_required
 def notifications(request):
-    push_subscription = get_object_or_404(PushSubscription, user=request.user)
+    push_subscriptions = PushSubscription.objects.all()
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,  # Assuming this is the field for the recipient
@@ -310,7 +310,7 @@ def notifications(request):
             comment.seen = True
             comment.save()
     context = {
-        'push_subscription': push_subscription,
+        'push_subscriptions': push_subscriptions,
         'requests_with_usernames': requests_with_usernames,
         'received_comments': received_comments,
     }
@@ -321,24 +321,46 @@ def send_push_notification(subscription_info, payload):
         webpush(
             subscription_info=subscription_info,
             data=payload,
-            vapid_private_key=os.getenv(VAPID_PRIVATE_KEY),
+            vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
             vapid_claims={"sub": "mailto:sebastianimarco@proton.me"}
         )
     except WebPushException as e:
         print("Failed to send notification: {}", repr(e))
 
-@csrf_exempt
+@login_required  # Temporarily disable CSRF protection if testing with fetch
 def save_subscription(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        PushSubscription.objects.create(
-            user=request.user,
-            endpoint=data['endpoint'],
-            expiration_time=data.get('expirationTime'),
-            p256dh=data['keys']['p256dh'],
-            auth=data['keys']['auth']
-        )
-        return JsonResponse({'status': 'Subscription saved'})
+        try:
+            # Parse the JSON body
+            subscription_data = json.loads(request.body)
+            # Get or create a PushSubscription for the user
+            subscription, created = PushSubscription.objects.get_or_create(
+                user=request.user,
+                endpoint=subscription_data['endpoint'],
+                defaults={
+                    'p256dh': subscription_data['keys']['p256dh'],
+                    'auth': subscription_data['keys']['auth']
+                }
+            )
+            context = {
+                'message': 'Existing push subscription activated'
+            }
+            if not created:
+                # Update the existing subscription if necessary
+                subscription.p256dh = subscription_data['keys']['p256dh']
+                subscription.auth = subscription_data['keys']['auth']
+                subscription.save()
+            context = {
+                'message': 'Push subscription saved'
+            }
+            # return JsonResponse({'status': 'Subscription saved successfully'})
+
+        except Exception as e:
+            print(f"Error saving subscription: {str(e)}")
+            return JsonResponse({'error': 'Failed to save subscription'}, status=400)
+
+    return render(request, 'message.html', context)
+    # return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 @login_required
 def my_conversations(request):
