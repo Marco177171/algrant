@@ -54,7 +54,6 @@ urlpatterns = [
     path('delete_message', views.delete_message, name='delete_message'),
     # NOTIFICATIONS
     path('notifications', views.notifications, name='notifications'),
-    # PUSH NOTIFICATIONS
     path('save_subscription', views.save_subscription, name='save_subscription'),
     # USER INTERFACE
     path('message', views.message, name='message'), # get a message when something happens

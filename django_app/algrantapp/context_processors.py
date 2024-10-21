@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db.models import Q
 from django.contrib.auth.models import User
 from .models import Comment, Conversation, Message, Friendship
@@ -57,3 +58,9 @@ def conversations_context(request):
         return {
             'unseen_messages': '0',
         }
+    
+def environ(request):
+    context = {
+        'vapid_public_key': settings.VAPID_PUBLIC_KEY,
+    }
+    return context

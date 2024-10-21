@@ -56,15 +56,11 @@
     </div>
 </body>
 </html>
-<<<<<<< HEAD
-=======
 
 <script>
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/static/push_notifications/service-worker.js').then(function(registration) {
+    navigator.serviceWorker.register('../static/push_notifications/service-worker.js').then(function(registration) {
         console.log('Service Worker registered with scope:', registration.scope);
-
-        // Call subscribeUser after the service worker is ready
         subscribeUser();
     }).catch(function(error) {
         console.error('Service Worker registration failed:', error);
@@ -74,34 +70,41 @@ if ('serviceWorker' in navigator) {
 function subscribeUser() {
     if (Notification.permission === 'granted') {
         console.log('Push notifications already granted');
-        // You could call the subscription process here directly
     } else {
-        // Request permission from the user
         console.log('Push notifications are denied by the user');
         Notification.requestPermission().then(function(permission) {
-            if (permission === 'granted') {
-                // Proceed with subscribing the user
-                navigator.serviceWorker.ready.then(function(registration) {
-                    const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
-                    const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-                    registration.pushManager.subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: convertedVapidKey
-                    }).then(function(subscription) {
-                        console.log('Send subscription to your server');
-                        fetch('save_subscription', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': csrftoken
-                            },
-                            body: JSON.stringify(subscription)
-                        });
+            console.log('Requesting permissions...');
+            // Proceed with subscribing the user
+            navigator.serviceWorker.ready.then(function(registration) {
+                console.log('Service worker ready. Registration...')
+                const vapidPublicKey = "{{vapid_public_key}}";
+                const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+                registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: convertedVapidKey
+                }).then(function(subscription) {
+                    console.log('Send subscription to your server');
+                    console.log('Attempting to send subscription data to server');
+                    fetch('{% url "save_subscription" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken  // Make sure CSRF token is properly set
+                        },
+                        body: JSON.stringify(subscription)
+                    })
+                    .then(function(response) {
+                        if (response.ok) {
+                            console.log('Subscription successfully sent to server');
+                        } else {
+                            console.log('Failed to send subscription to server:', response.statusText);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log('Fetch error:', error);
                     });
                 });
-            } else {
-                console.log('Push notifications permission denied');
-            }
+            });
         });
     }
 }
@@ -121,4 +124,3 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 </script>
->>>>>>> dev
