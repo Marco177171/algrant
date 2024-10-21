@@ -314,52 +314,6 @@ def notifications(request):
     }
     return render(request, 'notifications.html', context)
 
-def send_push_notification(subscription_info, payload):
-    try:
-        webpush(
-            subscription_info=subscription_info,
-            data=payload,
-            vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
-            vapid_claims={"sub": "mailto:sebastianimarco@proton.me"}
-        )
-    except WebPushException as e:
-        print("Failed to send notification: {}", repr(e))
-
-@login_required  # Temporarily disable CSRF protection if testing with fetch
-def save_subscription(request):
-    if request.method == 'POST':
-        try:
-            # Parse the JSON body
-            subscription_data = json.loads(request.body)
-            # Get or create a PushSubscription for the user
-            subscription, created = PushSubscription.objects.get_or_create(
-                user=request.user,
-                endpoint=subscription_data['endpoint'],
-                defaults={
-                    'p256dh': subscription_data['keys']['p256dh'],
-                    'auth': subscription_data['keys']['auth']
-                }
-            )
-            # context = {
-            #     'message': 'Existing push subscription activated'
-            # }
-            if not created:
-                # Update the existing subscription if necessary
-                subscription.p256dh = subscription_data['keys']['p256dh']
-                subscription.auth = subscription_data['keys']['auth']
-                subscription.save()
-            # context = {
-            #     'message': 'Push subscription saved'
-            # }
-            return JsonResponse({'status': 'Subscription saved successfully'})
-
-        except Exception as e:
-            print(f"Error saving subscription: {str(e)}")
-            return JsonResponse({'error': 'Failed to save subscription'}, status=400)
-
-    # return render(request, 'message.html', context)
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
-
 @login_required
 def my_conversations(request):
     conversations = Conversation.objects.filter(participants=request.user)
@@ -453,32 +407,32 @@ def new_message(request, conversation_id):
     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
     
     # Prepare the payload (notification message)
-    payload = json.dumps({
-        "title": "New message",
-        "body": f"{request.user.username}: {message_text}",
-        "icon": "/static/img/notification-icon.png",  # Path to notification icon
-        "url": f"/conversations/{conversation_id}/"  # URL to redirect the user when clicking the notification
-    })
+    # payload = json.dumps({
+    #     "title": "New message",
+    #     "body": f"{request.user.username}: {message_text}",
+    #     "icon": "/static/img/notification-icon.png",  # Path to notification icon
+    #     "url": f"/conversations/{conversation_id}/"  # URL to redirect the user when clicking the notification
+    # })
 
-    # Get the push subscription for the recipient(s)
-    for participant in destination_conversation.participants.exclude(id=request.user.id):  # Exclude the sender
-        try:
-            subscription = PushSubscription.objects.get(user=participant)
+    # # Get the push subscription for the recipient(s)
+    # for participant in destination_conversation.participants.exclude(id=request.user.id):  # Exclude the sender
+    #     try:
+    #         subscription = PushSubscription.objects.get(user=participant)
 
-            # Prepare the subscription_info
-            subscription_info = {
-                "endpoint": subscription.endpoint,
-                "keys": {
-                    "p256dh": subscription.p256dh,
-                    "auth": subscription.auth,
-                }
-            }
+    #         # Prepare the subscription_info
+    #         subscription_info = {
+    #             "endpoint": subscription.endpoint,
+    #             "keys": {
+    #                 "p256dh": subscription.p256dh,
+    #                 "auth": subscription.auth,
+    #             }
+    #         }
 
-            # Send the push notification
-            send_push_notification(subscription_info, payload)
+    #         # Send the push notification
+    #         send_push_notification(subscription_info, payload)
 
-        except PushSubscription.DoesNotExist:
-            print(f"No subscription info for {participant.username}")
+    #     except PushSubscription.DoesNotExist:
+    #         print(f"No subscription info for {participant.username}")
     return redirect(conversation, conversation_id)
 
 @login_required
