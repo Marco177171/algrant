@@ -5,13 +5,13 @@ self.addEventListener('push', function(event) {
     // Customize notification options
     const options = {
         body: payload,
-        icon: '/static/images/notification-icon.png',  // You can set an icon for the notification
-        badge: '/static/images/notification-badge.png', // Optional badge image
+        icon: '../icons/PulsarBlackBorder.png',  // You can set an icon for the notification
+        badge: '../icons/PulsarBlackBorder.png', // Optional badge image
     };
 
     // Show notification
     event.waitUntil(
-        self.registration.showNotification('New Message!', options)
+        self.registration.showNotification('Algrant: new message', options)
     );
 });
 

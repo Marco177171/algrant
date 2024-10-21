@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.urls import path
 from . import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -58,4 +59,6 @@ urlpatterns = [
     # USER INTERFACE
     path('message', views.message, name='message'), # get a message when something happens
     path('search_results', views.search_results, name='search_results'),
+    # Javascript files
+    path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service-worker.js'),
 ]
