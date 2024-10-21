@@ -52,7 +52,7 @@
         {% endblock %}
     </div>
     <div class="explorer">
-        <a href="#" onclick="handlePushNotification">Enable push notifications</a>
+        <a href="#" id="enable-push-notifications">Enable push notifications</a>
         {% block explorer %}
         {% endblock %}
     </div>
@@ -60,14 +60,22 @@
 </html>
 
 <script>
-    function handlePushNotification(event) {
-        // event.preventDefault(); // Prevent link default behavior
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for the DOM to fully load
+        const enablePushNotificationsLink = document.getElementById('enable-push-notifications');
+        
+        if (enablePushNotificationsLink) {
+            enablePushNotificationsLink.addEventListener('click', handlePushNotification);
+        }
+    });
 
-        // This function will now be triggered directly from a user action (click event)
+    function handlePushNotification(event) {
+        event.preventDefault(); // Prevent link default behavior
+
         Notification.requestPermission().then(function(permission) {
             if (permission === 'granted') {
                 console.log('Permission granted for notifications');
-                subscribeUser(); // Only proceed if permission is granted
+                subscribeUser(); // Proceed to subscribe if permission is granted
             } else {
                 console.log('Permission denied or dismissed');
             }
