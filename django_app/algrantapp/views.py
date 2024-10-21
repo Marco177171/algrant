@@ -286,6 +286,7 @@ def get_user_by_id(user_id):
 
 @login_required
 def notifications(request):
+    push_subscription = get_object_or_404(PushSubscription, user=request.user)
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,  # Assuming this is the field for the recipient
@@ -309,6 +310,7 @@ def notifications(request):
             comment.seen = True
             comment.save()
     context = {
+        'push_subscription': push_subscription,
         'requests_with_usernames': requests_with_usernames,
         'received_comments': received_comments,
     }

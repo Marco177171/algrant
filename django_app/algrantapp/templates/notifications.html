@@ -3,6 +3,11 @@
 {% block main %}
     <h6>notifications</h6>
     <div class="divider"></div>
+    {% if push_subscription %}
+        {% if push_subscription %}
+    {% else %}
+    {% endif %}
+    <a href="">enable push</a>
     <h3>friendship requests</h3>
     {% if requests_with_usernames %}
         {% for request in requests_with_usernames %}
