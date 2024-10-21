@@ -70,7 +70,7 @@
     });
 
     function handlePushNotification(event) {
-        event.preventDefault(); // Prevent link default behavior
+        // event.preventDefault(); // Prevent link default behavior
 
         Notification.requestPermission().then(function(permission) {
             if (permission === 'granted') {
