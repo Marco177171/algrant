@@ -286,7 +286,6 @@ def get_user_by_id(user_id):
 
 @login_required
 def notifications(request):
-    push_subscriptions = PushSubscription.objects.all()
     friendship_requests = Friendship.objects.filter(
         is_active=False,
         to_user_id=request.user.id,  # Assuming this is the field for the recipient
@@ -310,7 +309,6 @@ def notifications(request):
             comment.seen = True
             comment.save()
     context = {
-        'push_subscriptions': push_subscriptions,
         'requests_with_usernames': requests_with_usernames,
         'received_comments': received_comments,
     }
@@ -342,25 +340,25 @@ def save_subscription(request):
                     'auth': subscription_data['keys']['auth']
                 }
             )
-            context = {
-                'message': 'Existing push subscription activated'
-            }
+            # context = {
+            #     'message': 'Existing push subscription activated'
+            # }
             if not created:
                 # Update the existing subscription if necessary
                 subscription.p256dh = subscription_data['keys']['p256dh']
                 subscription.auth = subscription_data['keys']['auth']
                 subscription.save()
-            context = {
-                'message': 'Push subscription saved'
-            }
-            # return JsonResponse({'status': 'Subscription saved successfully'})
+            # context = {
+            #     'message': 'Push subscription saved'
+            # }
+            return JsonResponse({'status': 'Subscription saved successfully'})
 
         except Exception as e:
             print(f"Error saving subscription: {str(e)}")
             return JsonResponse({'error': 'Failed to save subscription'}, status=400)
 
-    return render(request, 'message.html', context)
-    # return JsonResponse({'error': 'Invalid request method'}, status=405)
+    # return render(request, 'message.html', context)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 @login_required
 def my_conversations(request):
