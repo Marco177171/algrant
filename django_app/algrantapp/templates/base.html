@@ -110,32 +110,7 @@
             });
         });
     }
-<<<<<<< HEAD
-    
-    function registerServiceWorker() {
-        console.log('Registering worker...')
-        if ("serviceWorker" in navigator) {
-            // Register a service worker hosted at the root of the
-            // site using the default scope.
-            navigator.serviceWorker.register("../static/push_notifications/service-worker.js").then(
-            (registration) => {
-                console.log("Service worker registration succeeded:", registration);
-                return ;
-            },
-            (error) => {
-                console.error(`Service worker registration failed: ${error}`);
-                return ;
-            },
-        );
-        } else {
-            console.error("Service workers are not supported.");
-            return ;
-        }
-    }
-    return outputArray;
-=======
 
->>>>>>> dev
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('../static/push_notifications/service-worker.js')
         .then(function(registration) {
@@ -159,8 +134,4 @@
         }
         return outputArray;
     }
-<<<<<<< HEAD
 </script>
-=======
-</script>
->>>>>>> dev
