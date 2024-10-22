@@ -2,3 +2,5 @@
 docker-compose.yml
 update.sh
 todo.yaml
+private_key.pem
+public_key.pem

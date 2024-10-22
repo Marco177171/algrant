@@ -1,4 +1,4 @@
-{% extends './conversation_base.html' %}
+{% extends './base.html' %}
 
 {% block main %}
     {% if messages %}
@@ -37,9 +37,7 @@
     </form>
 {% endblock %}
 
-<div class="explorer">
-    {% block explorer %}
-    <a href="{% url 'my_conversations' %}">Back to chats</a>
-    <a href="{% url 'chat_settings' conversation_id=conversation.id %}">Chat settings</a>
-    {% endblock %}
-</div>
+{% block explorer %}
+<a href="{% url 'my_conversations' %}">Back to chats</a>
+<a href="{% url 'chat_settings' conversation_id=conversation.id %}">Chat settings</a>
+{% endblock %}

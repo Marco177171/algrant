@@ -1,4 +1,5 @@
 from django.conf import settings
+import os
 from django.db.models import Q
 from django.contrib.auth.models import User
 from .models import Comment, Conversation, Message, Friendship
@@ -60,7 +61,12 @@ def conversations_context(request):
         }
     
 def environ(request):
-    context = {
+    return {
         'vapid_public_key': settings.VAPID_PUBLIC_KEY,
     }
-    return context
+
+# def read_vapid_public_key():
+#     key_file = os.path.join(os.path.dirname(__file__), 'vapid_public_key.txt')
+#     with open(key_file, 'r') as f:
+#         vapid_key = f.read().strip()
+#     return {'vapid_public_key': vapid_key}
