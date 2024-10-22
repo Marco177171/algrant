@@ -446,11 +446,12 @@ def new_message(request, conversation_id):
     #     send_push_notification(subscription_info, payload)
     # Send push notifications to participants
     participants = destination_conversation.participants.exclude(id=request.user.id)
+    print('LOG PARTICIPANTS: ', participants)
     subscriptions = PushSubscription.objects.filter(user__in=participants)
-
+    print('LOG SUBSCRIPTIONS: ', subscriptions)
     for subscription in subscriptions:
         send_push_notification(subscription, message_text)
-    return redirect(conversation, conversation_id)
+    # return redirect(conversation, conversation_id)
 
 @login_required
 def delete_message(request):
