@@ -451,8 +451,8 @@ def new_message(request, conversation_id):
     print('LOG SUBSCRIPTIONS: ', subscriptions)
     for subscription in subscriptions:
         send_push_notification(subscription, message_text)
-    # return redirect(conversation, conversation_id)
-    return JsonResponse({"status": "message created"})
+    return redirect(conversation, conversation_id)
+    # return JsonResponse({"status": "message created"})
 
 @login_required
 def delete_message(request):
@@ -480,9 +480,9 @@ def send_push_notification(subscription, message_content):
                 }
             },
             data=json.dumps({
-                "title": "New Message",
+                "title": "New message",
                 "body": message_content,
-                "icon": "/static/icons/message-icon.png"
+                "icon": "{% url static 'icons/PulsarBlackBorder.png %}"
             }),
             vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
             vapid_claims={
