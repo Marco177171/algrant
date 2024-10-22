@@ -428,22 +428,28 @@ def new_message(request, conversation_id):
     message_text = request.POST.get("message_text", "")
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)
     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
-    # PUSH NOTIFICATIONS
-    subscriptions = PushSubscription.objects.filter(user_id__in=destination_conversation.participants.exclude(id=request.user.id).values_list('id', flat=True))
-    payload = json.dumps({
-        'title': 'New message on Algrant',
-        'body': f"{request.user.username}: {message_text}",
-        'icon': '{% url static  %}'  # Personalizza l'icona se necessario
-    })
+    # # PUSH NOTIFICATIONS
+    # subscriptions = PushSubscription.objects.filter(user_id__in=destination_conversation.participants.exclude(id=request.user.id).values_list('id', flat=True))
+    # payload = json.dumps({
+    #     'title': 'New message on Algrant',
+    #     'body': f"{request.user.username}: {message_text}",
+    #     'icon': '{% url static  %}'  # Personalizza l'icona se necessario
+    # })
+    # for subscription in subscriptions:
+    #     subscription_info = {
+    #         'endpoint': subscription.endpoint,
+    #         'keys': {
+    #             'p256dh': subscription.p256dh,
+    #             'auth': subscription.auth
+    #         }
+    #     }
+    #     send_push_notification(subscription_info, payload)
+    # Send push notifications to participants
+    participants = conversation.participants.exclude(id=request.user.id)
+    subscriptions = PushSubscription.objects.filter(user__in=participants)
+
     for subscription in subscriptions:
-        subscription_info = {
-            'endpoint': subscription.endpoint,
-            'keys': {
-                'p256dh': subscription.p256dh,
-                'auth': subscription.auth
-            }
-        }
-        send_push_notification(subscription_info, payload)
+        send_push_notification(subscription, message.content)
     return redirect(conversation, conversation_id)
 
 @login_required
@@ -461,13 +467,26 @@ def delete_message(request):
         }
         return render(request, 'message.html', context)
 
-def send_push_notification(subscription_info, payload):
+def send_push_notification(subscription, message_content):
     try:
         webpush(
-            subscription_info=subscription_info,
-            data=payload,
-            vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
-            vapid_claims={"sub": "mailto:sebastianimarco@proton.me"}
+            subscription_info={
+                "endpoint": subscription.endpoint,
+                "keys": {
+                    "p256dh": subscription.p256dh,
+                    "auth": subscription.auth,
+                }
+            },
+            data=json.dumps({
+                "title": "New Message",
+                "body": message_content,
+                "icon": "/static/icons/message-icon.png"
+            }),
+            vapid_private_key="your_private_key",
+            vapid_claims={
+                "sub": "mailto:your_email@example.com"
+            }
         )
-    except WebPushException as e:
-        print("Failed to send notification:", repr(e))
+        print("Push notification sent successfully!")
+    except WebPushException as ex:
+        print("Failed to send push notification: {}", repr(ex))
