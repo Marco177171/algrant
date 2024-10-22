@@ -482,7 +482,7 @@ def send_push_notification(subscription, message_content):
                 "body": message_content,
                 "icon": "/static/icons/message-icon.png"
             }),
-            vapid_private_key="your_private_key",
+            vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
             vapid_claims={
                 "sub": "mailto:your_email@example.com"
             }
