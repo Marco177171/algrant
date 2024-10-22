@@ -445,7 +445,7 @@ def new_message(request, conversation_id):
     #     }
     #     send_push_notification(subscription_info, payload)
     # Send push notifications to participants
-    participants = conversation.participants.exclude(id=request.user.id)
+    participants = destination_conversation.participants.exclude(id=request.user.id)
     subscriptions = PushSubscription.objects.filter(user__in=participants)
 
     for subscription in subscriptions:
