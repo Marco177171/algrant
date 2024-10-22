@@ -3,3 +3,5 @@ docker-compose.yml
 update.sh
 pullAndTrigger.sh
 todo.yaml
+vapid_private.pem
+vapid_public.pem

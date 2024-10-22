@@ -314,7 +314,7 @@ def notifications(request):
     }
     return render(request, 'notifications.html', context)
 
-@login_required  # Temporarily disable CSRF protection if testing with fetch
+@login_required
 def save_push_subscription(request):
     if request.method == 'POST':
         try:
@@ -428,34 +428,22 @@ def new_message(request, conversation_id):
     message_text = request.POST.get("message_text", "")
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)
     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
-    
-    # # Prepare the payload (notification message)
-    # payload = json.dumps({
-    #     "title": "New message",
-    #     "body": f"{request.user.username}: {message_text}",
-    #     "icon": "/static/img/notification-icon.png",  # Path to notification icon
-    #     "url": f"/conversations/{conversation_id}/"  # URL to redirect the user when clicking the notification
-    # })
-
-    # # Get the push subscription for the recipient(s)
-    # for participant in destination_conversation.participants.exclude(id=request.user.id):  # Exclude the sender
-    #     try:
-    #         subscription = PushSubscription.objects.get(user=participant)
-
-    #         # Prepare the subscription_info
-    #         subscription_info = {
-    #             "endpoint": subscription.endpoint,
-    #             "keys": {
-    #                 "p256dh": subscription.p256dh,
-    #                 "auth": subscription.auth,
-    #             }
-    #         }
-
-    #         # Send the push notification
-    #         send_push_notification(subscription_info, payload)
-
-    #     except PushSubscription.DoesNotExist:
-    #         print(f"No subscription info for {participant.username}")
+    # PUSH NOTIFICATIONS
+    subscriptions = PushSubscription.objects.filter(user=destination_conversation.participants.exclude(id=request.user.id))
+    payload = json.dumps({
+        'title': 'New message on Algrant',
+        'body': f"{request.user.username}: {message_text}",
+        'icon': '{% url static  %}'  # Personalizza l'icona se necessario
+    })
+    for subscription in subscriptions:
+        subscription_info = {
+            'endpoint': subscription.endpoint,
+            'keys': {
+                'p256dh': subscription.p256dh,
+                'auth': subscription.auth
+            }
+        }
+        send_push_notification(subscription_info, payload)
     return redirect(conversation, conversation_id)
 
 @login_required
@@ -472,3 +460,14 @@ def delete_message(request):
             'message': 'You don\'t have the rights to erase the selected message'
         }
         return render(request, 'message.html', context)
+
+def send_push_notification(subscription_info, payload):
+    try:
+        webpush(
+            subscription_info=subscription_info,
+            data=payload,
+            vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
+            vapid_claims={"sub": "mailto:sebastianimarco@proton.me"}
+        )
+    except WebPushException as e:
+        print("Failed to send notification:", repr(e))
