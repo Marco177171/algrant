@@ -452,6 +452,7 @@ def new_message(request, conversation_id):
     for subscription in subscriptions:
         send_push_notification(subscription, message_text)
     # return redirect(conversation, conversation_id)
+    return JsonResponse({"status": "message created"})
 
 @login_required
 def delete_message(request):
