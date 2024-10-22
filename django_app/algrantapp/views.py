@@ -429,7 +429,7 @@ def new_message(request, conversation_id):
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)
     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
     # PUSH NOTIFICATIONS
-    subscriptions = PushSubscription.objects.filter(user=destination_conversation.participants.exclude(id=request.user.id))
+    subscriptions = PushSubscription.objects.filter(user_id=destination_conversation.participants.id.exclude(id=request.user.id))
     payload = json.dumps({
         'title': 'New message on Algrant',
         'body': f"{request.user.username}: {message_text}",
