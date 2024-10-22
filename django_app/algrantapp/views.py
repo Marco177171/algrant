@@ -449,7 +449,7 @@ def new_message(request, conversation_id):
     subscriptions = PushSubscription.objects.filter(user__in=participants)
 
     for subscription in subscriptions:
-        send_push_notification(subscription, message.content)
+        send_push_notification(subscription, message_text)
     return redirect(conversation, conversation_id)
 
 @login_required
