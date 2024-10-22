@@ -1,17 +1,11 @@
 self.addEventListener('push', function(event) {
-    // The data that you send from your server (payload)
-    const payload = event.data ? event.data.text() : 'No payload';
-
-    // Customize notification options
+    const data = event.data.json();
     const options = {
-        body: payload,
-        icon: '../icons/PulsarBlackBorder.png',  // You can set an icon for the notification
-        badge: '../icons/PulsarBlackBorder.png', // Optional badge image
+        body: data.body,
+        icon: data.icon,
     };
-
-    // Show notification
     event.waitUntil(
-        self.registration.showNotification('Algrant: new message', options)
+        self.registration.showNotification(data.title, options)
     );
 });
 
