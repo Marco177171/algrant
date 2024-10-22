@@ -314,6 +314,29 @@ def notifications(request):
     }
     return render(request, 'notifications.html', context)
 
+@login_required  # Temporarily disable CSRF protection if testing with fetch
+def save_push_subscription(request):
+    if request.method == 'POST':
+        try:
+            subscription_data = json.loads(request.body)
+            subscription, created = PushSubscription.objects.get_or_create(
+                user=request.user,
+                endpoint=subscription_data['endpoint'],
+                defaults={
+                    'p256dh': subscription_data['keys']['p256dh'],
+                    'auth': subscription_data['keys']['auth']
+                }
+            )
+            if not created:
+                subscription.p256dh = subscription_data['keys']['p256dh']
+                subscription.auth = subscription_data['keys']['auth']
+                subscription.save()
+            return JsonResponse({'status': 'Subscription saved successfully'})
+        except Exception as e:
+            print(f"Error saving subscription: {str(e)}")
+            return JsonResponse({'error': 'Failed to save subscription'}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 @login_required
 def my_conversations(request):
     conversations = Conversation.objects.filter(participants=request.user)
@@ -406,7 +429,7 @@ def new_message(request, conversation_id):
     destination_conversation = get_object_or_404(Conversation, id=conversation_id)
     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
     
-    # Prepare the payload (notification message)
+    # # Prepare the payload (notification message)
     # payload = json.dumps({
     #     "title": "New message",
     #     "body": f"{request.user.username}: {message_text}",

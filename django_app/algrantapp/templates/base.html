@@ -95,7 +95,7 @@
                 applicationServerKey: convertedVapidKey
             }).then(function(subscription) {
                 console.log('Sending subscription data to server...');
-                fetch('{% url "save_subscription" %}', {
+                fetch('{% url "save_push_subscription" %}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
