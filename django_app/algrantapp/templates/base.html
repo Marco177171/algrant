@@ -62,11 +62,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         const enablePushNotificationsLink = document.getElementById('enable-push-notifications');
         if (enablePushNotificationsLink) {
-            enablePushNotificationsLink.addEventListener('click', handlePushNotification);
+            enablePushNotificationsLink.addEventListener('click', subscribeToPushNotifications);
         }
     });
 
-    function handlePushNotification(event) {
+    function subscribeToPushNotifications(event) {
         event.preventDefault();
         Notification.requestPermission().then(function(permission) {
             if (permission === 'granted') {
