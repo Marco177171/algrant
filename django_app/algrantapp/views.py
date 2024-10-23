@@ -11,6 +11,7 @@ from django.db.models import Q
 from pywebpush import webpush, WebPushException # push notifications
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.templatetags.static import static
 
 # Account Management
 
@@ -316,12 +317,9 @@ def notifications(request):
 
 @login_required
 def save_push_subscription(request):
-    print('LOG REQUEST: ', request)
     if request.method == 'POST':
-        print('LOG REQUEST BODY: ', request.body)
         try:
             subscription_data = json.loads(request.body)
-            print('LOG SUBSCRIPTION DATA: ', subscription_data)
             subscription, created = PushSubscription.objects.get_or_create(
                 user=request.user,
                 endpoint=subscription_data['endpoint'],
@@ -494,7 +492,7 @@ def send_push_notification(subscription, message_content):
             data=json.dumps({
                 "title": "New message",
                 "body": message_content,
-                "icon": "{% url static 'icons/PulsarBlackBorder.png %}"
+                "icon": static('icons/PulsarBlackBorder.png')
             }),
             vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
             vapid_claims={
