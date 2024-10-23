@@ -460,9 +460,7 @@ def new_message(request, conversation_id):
     #     send_push_notification(subscription_info, payload)
     # Send push notifications to participants
     participants = destination_conversation.participants.exclude(id=request.user.id)
-    print('LOG PARTICIPANTS: ', participants)
     subscriptions = PushSubscription.objects.filter(user__in=participants)
-    print('LOG SUBSCRIPTIONS: ', subscriptions)
     for subscription in subscriptions:
         send_push_notification(subscription, message_text)
     return redirect(conversation, conversation_id)
@@ -500,7 +498,7 @@ def send_push_notification(subscription, message_content):
             }),
             vapid_private_key=os.getenv('VAPID_PRIVATE_KEY'),
             vapid_claims={
-                "sub": "mailto:your_email@example.com"
+                "sub": "mailto:sebastianimarco@proton.me"
             }
         )
         print("Push notification sent successfully!")
