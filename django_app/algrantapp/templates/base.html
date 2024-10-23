@@ -60,17 +60,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Wait for the DOM to fully load
         const enablePushNotificationsLink = document.getElementById('enable-push-notifications');
-        
         if (enablePushNotificationsLink) {
             enablePushNotificationsLink.addEventListener('click', handlePushNotification);
         }
     });
 
     function handlePushNotification(event) {
-        event.preventDefault(); // Prevent link default behavior
-
+        event.preventDefault();
         Notification.requestPermission().then(function(permission) {
             if (permission === 'granted') {
                 console.log('Permission granted for notifications');
@@ -135,12 +132,10 @@
     }
         
     function urlBase64ToUint8Array(base64String) {
-        // Replace URL-safe characters
         const padding = '='.repeat((4 - base64String.length % 4) % 4);
         const base64 = (base64String + padding)
             .replace(/-/g, '+')
             .replace(/_/g, '/');
-        
         const rawData = window.atob(base64);
         return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
     }
@@ -151,7 +146,6 @@
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                // Check if this cookie string begins with the name we want
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
