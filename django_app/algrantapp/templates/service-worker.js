@@ -1,7 +1,8 @@
 self.addEventListener('push', function(event) {
+    console.log('Push event received:', event);
     try {
-        console.log('in SERVICE WORKER');
         const data = event.data.json();
+        console.log('Push data:', data);
         const options = {
             body: data.body,
             icon: data.icon,
