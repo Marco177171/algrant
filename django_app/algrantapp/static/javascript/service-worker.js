@@ -1,14 +1,18 @@
 self.addEventListener('push', function(event) {
-    console.log('in SERVICE WORKER')
-    const data = event.data.json();
-    const options = {
-        body: data.body,
-        icon: data.icon,
-    };
-    console.log('OPTIONS: ' + options);
-    event.waitUntil(
-        self.registration.showNotification(data.title, options)
-    );
+    try {
+        console.log('in SERVICE WORKER');
+        const data = event.data.json();
+        const options = {
+            body: data.body,
+            icon: data.icon,
+        };
+        console.log('OPTIONS: ' + options);
+        event.waitUntil(
+            self.registration.showNotification(data.title, options)
+        );
+    } catch (error) {
+        console.error('Error in push event:', error);
+    }
 });
 
 self.addEventListener('notificationclick', function(event) {
