@@ -18,7 +18,7 @@ self.addEventListener('push', function(event) {
 
 self.addEventListener('notificationclick', function(event) {
     // Define a URL to open when the notification is clicked
-    const targetUrl = '/messages';  // Adjust based on your app's structure
+    const targetUrl = '/my_conversations';  // Adjust based on your app's structure
     event.notification.close(); // Close the notification
 
     // Focus on the existing window if it's already open, or open a new one
