@@ -82,14 +82,16 @@
     }
         
     function subscribeUser() {
-        console.log('Subscribing the user...')
+        console.log('Subscribing the user...');
         navigator.serviceWorker.ready.then(function(registration) {
             console.log('Service worker is ready');
             const vapidPublicKey = "{{vapid_public_key}}";
-            const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+            console.log('vapid key: ', vapidPublicKey);
+            // const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+            console.log('converted vapid key: ', vapidPublicKey);
             registration.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: convertedVapidKey
+                applicationServerKey: vapidPublicKey
             })
             .then(function(subscription) {
                 console.log('Sending subscription data to server...');
@@ -121,25 +123,39 @@
         });
     }
 
-    if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-            navigator.serviceWorker
-                .register("{% static 'javascript/service-worker.js' %}")
-                .then(registration =>
-                    console.log("Service worker registered", registration)
-                )
-                .catch(err => console.log(err));
+    if ('serviceWorker' in navigator) {
+        console.log('service worker registration');
+        window.addEventListener('load', async function() {
+            console.log('loading service worker');
+            const registration = await navigator.serviceWorker.register('{% static "javascript/service-worker.js" %}');
+            console.log(registration);
+            if (registration.waiting && registration.active) {
+                console.log('Please close all tabs to get updates.');
+            } else {
+                registration.addEventListener('updatefound', () => {
+                    console.log('found update');
+                    registration.installing.addEventListener('statechange', () => {
+                        if (event.target.state === 'installed') {
+                            if (registration.active) {
+                                console.log('Please close all tabs to get updates.');
+                            } else {
+                                console.log('Content is cached for the first time!');
+                            }
+                        }
+                    });
+                });
+            }
         });
     }
         
-    function urlBase64ToUint8Array(base64String) {
-        const padding = '='.repeat((4 - base64String.length % 4) % 4);
-        const base64 = (base64String + padding)
-            .replace(/-/g, '+')
-            .replace(/_/g, '/');
-        const rawData = window.atob(base64);
-        return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
-    }
+    // function urlBase64ToUint8Array(base64String) {
+    //     const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    //     const base64 = (base64String + padding)
+    //         .replace(/-/g, '+')
+    //         .replace(/_/g, '/');
+    //     const rawData = window.atob(base64);
+    //     return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+    // }
 
     function getCookie(name) {
         let cookieValue = null;
