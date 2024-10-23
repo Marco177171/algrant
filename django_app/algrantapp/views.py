@@ -316,9 +316,12 @@ def notifications(request):
 
 @login_required
 def save_push_subscription(request):
+    print('LOG REQUEST: ', request)
     if request.method == 'POST':
+        print('LOG REQUEST BODY: ', request.body)
         try:
             subscription_data = json.loads(request.body)
+            print('LOG SUBSCRIPTION DATA: ', subscription_data)
             subscription, created = PushSubscription.objects.get_or_create(
                 user=request.user,
                 endpoint=subscription_data['endpoint'],
@@ -327,15 +330,26 @@ def save_push_subscription(request):
                     'auth': subscription_data['keys']['auth']
                 }
             )
-            if not created:
+            if created:
+                print('LOG: Subscription created')
+            else:
+                print('LOG: Subscription already exists, updating')
                 subscription.p256dh = subscription_data['keys']['p256dh']
                 subscription.auth = subscription_data['keys']['auth']
                 subscription.save()
             return JsonResponse({'status': 'Subscription saved successfully'})
+        except json.JSONDecodeError as e:
+            print(f"JSON decode error: {str(e)}")
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+        except KeyError as e:
+            print(f"Missing key in subscription data: {str(e)}")
+            return JsonResponse({'error': f'Missing key: {str(e)}'}, status=400)
         except Exception as e:
             print(f"Error saving subscription: {str(e)}")
             return JsonResponse({'error': 'Failed to save subscription'}, status=400)
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    else:
+        print('LOG: Invalid request method')
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 @login_required
 def my_conversations(request):

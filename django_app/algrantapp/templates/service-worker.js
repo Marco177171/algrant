@@ -6,7 +6,6 @@ self.addEventListener('push', function(event) {
             body: data.body,
             icon: data.icon,
         };
-        console.log('OPTIONS: ' + options);
         event.waitUntil(
             self.registration.showNotification(data.title, options)
         );
@@ -17,7 +16,7 @@ self.addEventListener('push', function(event) {
 
 self.addEventListener('notificationclick', function(event) {
     // Define a URL to open when the notification is clicked
-    const targetUrl = '/messages';  // Adjust based on your app's structure
+    const targetUrl = '/my_conversations';  // Adjust based on your app's structure
     event.notification.close(); // Close the notification
 
     // Focus on the existing window if it's already open, or open a new one
@@ -34,4 +33,19 @@ self.addEventListener('notificationclick', function(event) {
             }
         })
     );
+});
+
+self.addEventListener('install', function(event) {
+    console.log('Service Worker installing.');
+    // Perform install steps
+});
+
+self.addEventListener('activate', function(event) {
+    console.log('Service Worker activating.');
+    // Perform activate steps
+});
+
+self.addEventListener('fetch', function(event) {
+    console.log('Fetching:', event.request.url);
+    // Perform fetch steps
 });
