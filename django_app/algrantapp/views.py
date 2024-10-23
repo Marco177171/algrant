@@ -460,9 +460,12 @@ def new_message(request, conversation_id):
     participants = destination_conversation.participants.exclude(id=request.user.id)
     subscriptions = PushSubscription.objects.filter(user__in=participants)
     for subscription in subscriptions:
+        print(f"Subscription endpoint: {subscription.endpoint}")
+        print(f"Subscription p256dh: {subscription.p256dh}")
+        print(f"Subscription auth: {subscription.auth}")
         send_push_notification(subscription, message_text)
-    return redirect(conversation, conversation_id)
-    # return JsonResponse({"status": "message created"})
+    # return redirect(conversation, conversation_id)
+    return JsonResponse({"status": "message created"})
 
 @login_required
 def delete_message(request):
