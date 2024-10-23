@@ -100,7 +100,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': csrftoken
+                        'X-CSRFToken': csrftoken  // Ensure CSRF token is properly set
                     },
                     body: JSON.stringify(subscription)
                 })
