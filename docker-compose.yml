@@ -19,6 +19,8 @@ services:
       - ${POSTGRES_PORT}:5432
     volumes:
       - algrant_postgres_volume:/var/lib/postgresql/data
+    networks:
+      - algrantNet
     restart: always
   
 networks:
@@ -26,3 +28,4 @@ networks:
 
 volumes:
   algrant_django_volume:
+  algrant_postgres_volume:

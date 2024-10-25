@@ -13,11 +13,6 @@
             <button class="success" type="submit">share</button>
         </form>
     </div>
-    {% if sponsors %}
-        {% for sponsor in sponsors %}
-            <p>{{sponsor.name}}</p>
-        {% endfor %}
-    {% endif %}
     <h3>latest posts</h3>
     {% with index=0 %}
         {% for post in posts %}

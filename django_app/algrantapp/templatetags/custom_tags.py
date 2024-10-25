@@ -9,4 +9,4 @@ def increase_index(context):
         context['index'] = 0
     else:
         context['index'] = index + 1
-    return context['index']
+    return ''
