@@ -1,8 +1,9 @@
 from django.conf import settings
+import random
 import os
 from django.db.models import Q
 from django.contrib.auth.models import User
-from .models import Comment, Conversation, Message, Friendship
+from .models import Comment, Conversation, Message, Friendship, Sponsor
 
 def get_my_friends(request):
     if request.user.is_authenticated:
@@ -21,6 +22,12 @@ def get_my_friends(request):
         return {
             'my_friends_list': []
         }
+
+def get_sponsors(request):
+    sponsors = list(Sponsor.objects.filter(is_active=True).order_by('?'))
+    return {
+        'sponsors': sponsors
+    }
 
 def notification_context(request):
     if request.user.is_authenticated:
@@ -63,6 +70,12 @@ def conversations_context(request):
 def environ(request):
     return {
         'vapid_public_key': settings.VAPID_PUBLIC_KEY,
+    }
+
+def get_sponsors(request):
+    sponsors = Sponsor.objects.all().order_by('?')
+    return {
+        'sponsors': sponsors
     }
 
 # def read_vapid_public_key():

@@ -359,6 +359,7 @@ def my_conversations(request):
 
 @login_required
 def conversation(request, conversation_id):
+    print('in conversation detail view')
     conversation = get_object_or_404(Conversation, id=conversation_id)
     messages = Message.objects.filter(conversation=conversation).order_by('id')[:50]
     for message in messages:
@@ -464,8 +465,8 @@ def new_message(request, conversation_id):
         print(f"Subscription p256dh: {subscription.p256dh}")
         print(f"Subscription auth: {subscription.auth}")
         send_push_notification(subscription, message_text)
-    # return redirect(conversation, conversation_id)
-    return JsonResponse({"status": "message created"})
+    return redirect(conversation, conversation_id)
+    # return JsonResponse({"status": "message created"})
 
 @login_required
 def delete_message(request):
@@ -483,7 +484,9 @@ def delete_message(request):
         return render(request, 'message.html', context)
 
 def send_push_notification(subscription, message_content):
+    print('send push notification view')
     try:
+        print('in try')
         webpush(
             subscription_info={
                 "endpoint": subscription.endpoint,

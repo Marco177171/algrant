@@ -11,7 +11,22 @@ services:
     env_file:
       - .env
     restart: always
+<<<<<<< HEAD
 
+=======
+  algrant_postgres:
+    container_name: algrant_postgres
+    image: postgres:latest
+    env_file: .env
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - algrant_postgres_volume:/var/lib/postgresql/data
+    networks:
+      - algrantNet
+    restart: always
+  
+>>>>>>> prototype
 networks:
   algrantNet:
 
