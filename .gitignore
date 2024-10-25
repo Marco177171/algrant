@@ -1,5 +1,6 @@
 # virtual env if present
 venv
+require.txt
 
 # env vars
 .env
