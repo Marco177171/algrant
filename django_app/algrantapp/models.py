@@ -53,8 +53,19 @@ class Conversation(models.Model):
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = models.TextField(max_length=2048)
     timestamp = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
     def __str__(self):
         return self.content
+    
+class Sponsor(models.Model):
+    name = models.TextField(max_length=64)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    slogan = models.TextField(max_length=256)
+    url_to_website = models.URLField(max_length=256)
+    activated_on = models.DateTimeField(auto_now_add=True)
+    days_of_validity = models.IntegerField()
+    is_active = models.BooleanField(default=True)
+    def __str__(self):
+        return self.name
