@@ -72,6 +72,12 @@ def environ(request):
         'vapid_public_key': settings.VAPID_PUBLIC_KEY,
     }
 
+def get_sponsors(request):
+    sponsors = Sponsor.objects.all().order_by('?')
+    return {
+        'sponsors': sponsors
+    }
+
 # def read_vapid_public_key():
 #     key_file = os.path.join(os.path.dirname(__file__), 'vapid_public_key.txt')
 #     with open(key_file, 'r') as f:

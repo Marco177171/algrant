@@ -1,6 +1,8 @@
+venv
 .env
 docker-compose.yml
 update.sh
 todo.yaml
 vapid_private.pem
 vapid_public.pem
+Makefile

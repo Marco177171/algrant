@@ -1,5 +1,7 @@
 {% extends './base.html' %}
 {% load static %}
+{% load custom_filters %}
+{% load custom_tags %}
 
 {% block main %}
     <h6>{{posts_amount}} posts published</h6>
@@ -17,6 +19,7 @@
         {% endfor %}
     {% endif %}
     <h3>latest posts</h3>
+<<<<<<< HEAD
     {% with firstname="Stalikken" %}
         <h1>Hello {{ firstname }}</h1>
     {% endwith %}
@@ -38,11 +41,27 @@
                     {% endwith %}
                 {% endif %}
             {% endif %}
+=======
+    {% with index=0 %}
+        {% for post in posts %}
+>>>>>>> dev
             <div class="divider"></div>
             <a href="{% url 'user_profile' username=post.created_by.username %}">{{ post.created_by }}</a>
             <span>{{ post.date_time }}</span>
             <p>{{ post.content }}</p>
             <a href="{% url 'post_detail' post_id=post.id %}">Open</a>
+<<<<<<< HEAD
+=======
+            {% if sponsors and forloop.counter|divisibleby:3 %}
+                {% with sponsor=sponsors|get_item_at_index:index %}
+                    <div class="divider"></div>
+                    <span>Algrant is sponsored by:</span>
+                    <a href="{{ sponsor.website_url }}">{{ sponsor.name }}</a>
+                    <h6>{{ sponsor.slogan }}</h6>
+                {% endwith %}
+                {% increase_index %}
+            {% endif %}
+>>>>>>> dev
         {% endfor %}
     {% endwith %}
 {% endblock %}
