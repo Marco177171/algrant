@@ -1,0 +1,28 @@
+services:
+  algrant_django:
+    container_name: algrant_django
+    build: ./django_app
+    ports:
+      - 8002:8000
+    volumes:
+      - algrant_django_volume:/var/lib/data
+    networks:
+      - algrantNet
+    env_file:
+      - .env
+    restart: always
+  algrant_postgres:
+    container_name: algrant_postgres
+    image: postgres:latest
+    env_file: .env
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - algrant_postgres_volume:/var/lib/postgresql/data
+    restart: always
+  
+networks:
+  algrantNet:
+
+volumes:
+  algrant_django_volume:
