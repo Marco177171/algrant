@@ -1,2 +1,5 @@
 db.sqlite3
 .env
+algrant/__pycache__/*
+algrantapp/__pycache__/*
+algrantapp/migrations/*
