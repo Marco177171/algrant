@@ -11,15 +11,37 @@
             <button class="success" type="submit">share</button>
         </form>
     </div>
+    {% if sponsors %}
+        {% for sponsor in sponsors %}
+            <p>{{sponsor.name}}</p>
+        {% endfor %}
+    {% endif %}
     <h3>latest posts</h3>
-    {% for post in posts %}
-        <div class="divider"></div>
-        <a href="{% url 'user_profile' username=post.created_by.username %}">{{post.created_by}}</a>
-        <span>{{post.date_time}}</span>
-        <p>{{ post.content }}</p>
-        <!-- <a href="">Like <img src="{% static 'icons/heart_empty.png' %}" height="13px" alt="love"></a> -->
-        <a href="{% url 'post_detail' post_id=post.id %}">Open</a>
-    {% endfor %}
+    {% with index=0 %}
+        {% for post in posts %}
+            {% if sponsors %}
+                {% if forloop.counter|divisibleby:3 %}
+                    {% with sponsor=sponsors|slice:index %}
+                        <div class="divider"></div>
+                        <span>Algrant is sponsored by:</span>
+                        <a href="{{ sponsor.0.website_url }}">{{ sponsor.0.name }}</a>
+                        <p>{{ sponsor.0.slogan }}</p>
+                    {% endwith %}
+                    {% with index=index|add:"1" %}
+                        {% if index >= sponsors|length %}
+                            {% with index=0 %}{% endwith %}
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+            {% endif %}
+
+            <div class="divider"></div>
+            <a href="{% url 'user_profile' username=post.created_by.username %}">{{ post.created_by }}</a>
+            <span>{{ post.date_time }}</span>
+            <p>{{ post.content }}</p>
+            <a href="{% url 'post_detail' post_id=post.id %}">Open</a>
+        {% endfor %}
+    {% endwith %}
 {% endblock %}
 
 {% block main_bottom %}
