@@ -1,7 +1,7 @@
 NAME=AlgrantApp
 
 $(NAME):
-	docker compose up --build
+	docker compose up --build -d
 # add -d for background
 
 stop:

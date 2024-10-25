@@ -60,17 +60,6 @@ class Message(models.Model):
         return self.content
     
 class Sponsor(models.Model):
-<<<<<<< HEAD
-    name = models.TextField(max_length=64)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    slogan = models.TextField(max_length=256)
-    url_to_website = models.URLField(max_length=256)
-    activated_on = models.DateTimeField(auto_now_add=True)
-    days_of_validity = models.IntegerField()
-    is_active = models.BooleanField(default=True)
-    def __str__(self):
-        return self.name
-=======
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.TextField(max_length=128)
     slogan = models.TextField(max_length=256)
@@ -78,4 +67,3 @@ class Sponsor(models.Model):
     valid_through = models.DateTimeField()
     def __str__(self):
         return self.name
->>>>>>> dev

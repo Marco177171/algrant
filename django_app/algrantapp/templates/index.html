@@ -19,39 +19,13 @@
         {% endfor %}
     {% endif %}
     <h3>latest posts</h3>
-<<<<<<< HEAD
-    {% with firstname="Stalikken" %}
-        <h1>Hello {{ firstname }}</h1>
-    {% endwith %}
-    {% with sponsors_index=0 %}
-        {% for post in posts %}
-            {% if forloop.counter|divisibleby:3 %}
-                {% if sponsors %}
-                    <p>INDEX: {{sponsors_index}}</p>
-                    {% with sponsor=sponsors|slice:sponsors_index %}
-                        <div class="divider"></div>
-                        <span>Algrant is sponsored by:</span>
-                        <a href="{{ sponsor.0.url_to_website }}">{{ sponsor.0.name }}</a>
-                        <p>{{ sponsor.0.slogan }}</p>
-                    {% endwith %}
-                    {% with sponsor_index=sponsor_index|add:1 %}
-                        {% if sponsor_index >= sponsors|length %}
-                            {% with sponsor_index=0 %}{% endwith %}
-                        {% endif %}
-                    {% endwith %}
-                {% endif %}
-            {% endif %}
-=======
     {% with index=0 %}
         {% for post in posts %}
->>>>>>> dev
             <div class="divider"></div>
             <a href="{% url 'user_profile' username=post.created_by.username %}">{{ post.created_by }}</a>
             <span>{{ post.date_time }}</span>
             <p>{{ post.content }}</p>
             <a href="{% url 'post_detail' post_id=post.id %}">Open</a>
-<<<<<<< HEAD
-=======
             {% if sponsors and forloop.counter|divisibleby:3 %}
                 {% with sponsor=sponsors|get_item_at_index:index %}
                     <div class="divider"></div>
@@ -61,7 +35,6 @@
                 {% endwith %}
                 {% increase_index %}
             {% endif %}
->>>>>>> dev
         {% endfor %}
     {% endwith %}
 {% endblock %}
