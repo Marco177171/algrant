@@ -1,7 +1,36 @@
+# virtual env if present
 venv
+
+# env vars
 .env
+django_app/.env
+
+# docker related files
 docker-compose.yml
+django_app/Dockerfile
+
+# shell scripts
 update.sh
+pushUpdates.sh
+pullAndTrigger.sh
+
+# todo files
 todo.yaml
+
+# keys
 vapid_private.pem
 vapid_public.pem
+
+# makefiles
+Makefile
+
+# caches and migration files
+django_app/algrant/__pycache__/*
+django_app/algrantapp/__pycache__/*
+django_app/algrantapp/migrations/*
+
+# settings
+django_app/algrant/settings.py
+
+# databases if present
+django_app/db.sqlite3

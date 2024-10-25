@@ -1,4 +1,0 @@
-db.sqlite3
-algrant/__pycache__/*
-algrantapp/__pycache__/*
-algrantapp/migrations/*
