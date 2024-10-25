@@ -24,7 +24,7 @@ def get_my_friends(request):
         }
 
 def get_sponsors(request):
-    sponsors = list(Sponsor.objects.filter(is_active=True).order_by('?'))
+    sponsors = list(Sponsor.objects.filter().order_by('?'))
     return {
         'sponsors': sponsors
     }
