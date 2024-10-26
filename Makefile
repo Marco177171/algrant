@@ -2,7 +2,6 @@ NAME=AlgrantApp
 
 $(NAME):
 	python ./algrantapp/manage.py runserver
-# add -d for background
 
 migrations:
 	python ./algrantapp/manage.py makemigrations
