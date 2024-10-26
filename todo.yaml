@@ -1,0 +1,18 @@
+chat:
+  visualizzazione: bottom-up con ultimo messaggio in fondo
+  ultime-chat: ordina le chat in base al messaggio non visto più recente, visualizza amount di nuovi messaggi
+  message_counter-context_processor: count_my_unseen_message. If any, show_amount_on_each_page
+  create_new_chat_with_single_user (message button on user profile):
+  # filter on chats
+  # erase_chat_if_creator:
+  # add_user_to_existing_chat:
+  # admin_dashboard: url + view -> add_user_to_chat, delete_chat, remove_user_from_chat
+  # participant_dashboard: url + view -> leave_chat
+
+comments:
+  # delete_my_comment:
+
+push_notifications:
+  parametrizzazione: minimizzazione della ridondanza
+  funzione: far squillare i telefoni
+  error_handler: get to create notification subscription in db when user grants permission
