@@ -15,6 +15,9 @@ update.sh
 pushUpdates.sh
 pullAndTrigger.sh
 
+# todo files
+todo.yaml
+
 # keys if present
 vapid_private.pem
 vapid_public.pem
