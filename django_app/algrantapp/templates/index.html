@@ -21,12 +21,14 @@
             <span>{{ post.date_time }}</span>
             <p>{{ post.content }}</p>
             <a href="{% url 'post_detail' post_id=post.id %}">Open</a>
+            <!-- SPONSORS -->
             {% if sponsors and forloop.counter|divisibleby:3 %}
                 {% with sponsor=sponsors|get_item_at_index:index %}
                     <div class="divider"></div>
                     <span>Algrant is sponsored by:</span>
                     <a href="{{ sponsor.website_url }}">{{ sponsor.name }}</a>
                     <h6>{{ sponsor.slogan }}</h6>
+                    <a href="{% url 'support_algrant' %}">Support Algrant</a>
                 {% endwith %}
                 {% increase_index %}
             {% endif %}

@@ -8,8 +8,7 @@ services:
       - algrant_django_volume:/var/lib/data
     networks:
       - algrantNet
-    env_file:
-      - .env
+    env_file: .env
     restart: always
   algrant_postgres:
     container_name: algrant_postgres

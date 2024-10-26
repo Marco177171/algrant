@@ -508,3 +508,7 @@ def send_push_notification(subscription, message_content):
         print("Push notification sent successfully!")
     except WebPushException as ex:
         print("Failed to send push notification: {}", repr(ex))
+
+@login_required
+def support_algrant(request):
+    return render(request, 'support_algrant.html')
