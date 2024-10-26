@@ -2,6 +2,9 @@
 venv
 require.txt
 
+# Makefile
+Makefile
+
 # env vars
 .env
 django_app/.env

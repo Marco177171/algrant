@@ -1,19 +1,18 @@
 NAME=AlgrantApp
 
 $(NAME):
-	docker compose up --build -d
+	python ./algrantapp/manage.py runserver
 # add -d for background
 
-stop:
-	docker compose stop
+migrations:
+	python ./algrantapp/manage.py makemigrations
+	python ./algrantapp/manage.py migrate
+	python ./algrantapp/manage.py createsuperuser
 
 clean:
-	docker compose down
+	rm -rf algrantapp/db.sqlite
 
 re:	clean $(NAME)
-
-free:
-	docker rm algrant_django
 
 #pure:
 #	docker system prune -a
