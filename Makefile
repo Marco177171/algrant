@@ -1,12 +1,12 @@
 NAME=AlgrantApp
 
 $(NAME):
-	python ./algrantapp/manage.py runserver
+	python ./django_app/manage.py runserver
 
 migrations:
-	python ./algrantapp/manage.py makemigrations
-	python ./algrantapp/manage.py migrate
-	python ./algrantapp/manage.py createsuperuser
+	python ./django_app/manage.py makemigrations
+	python ./django_app/manage.py migrate
+	python ./django_app/manage.py createsuperuser
 
 clean:
 	rm -rf algrantapp/db.sqlite
