@@ -1,5 +1,9 @@
 {% extends './base.html' %}
 
+{% block title %}
+    <p>Algrant supporters</p>
+{% endblock %}
+
 {% block main %}
 <h3>Support the project</h3>
 <p>
@@ -14,7 +18,7 @@ In order to maintain itself, of course, Algrant will need sponsorships. Those wh
 If you wish to sponsor the project, know that we won't use any kind of data to target specific people.
 Your sponsorship appears on the page in random order with the others, and it doesn't appear more or less to any user on the base of his/her position, age, cultural level or ideology.
 </p>
-<h5>Having that said:</h5>
+<h5>That being said:</h5>
 <p>If you find value in what we're doing, and you want to appear among our supporters, get in touch with us.</p>
 <a href="{% url 'user_profile' username='marco' %}">Add and text Marco, Algrant's admin</a>
 

@@ -1,5 +1,9 @@
 {% extends './base.html' %}
 
+{% block title %}
+    <p>{{conversation.conversation_name}}</p>
+{% endblock %}
+
 {% block main %}
     {% if messages %}
         {% for message in messages %}
