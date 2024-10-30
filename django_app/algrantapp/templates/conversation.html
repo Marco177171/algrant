@@ -24,7 +24,6 @@
                 <p>{{message.content}}</p>
             {% endif %}
         {% endfor %}
-        <div id="scrollHere"></div>
     {% else %}
     <h3>No messages yet</h3>
     <p>You can start writing or add people to the chat from <a href="{% url 'chat_settings' conversation_id=conversation.id %}">chat settings</a></p>
@@ -45,10 +44,7 @@
 
 {% block javascript %}
 <script>
-    scrollHere = document.getElementById('scrollHere').scrollHeight;
-    main = document.getElementById('main');
-    console.log('main scrollTop: ', main.scrollTop)
-    console.log('scrollHere scrollTop: ', scrollHere.scrollTop)
+    main = document.getElementByTagName('main');
     main.scrollTop = main.scrollHeight;
 </script>
 {% endblock %}
