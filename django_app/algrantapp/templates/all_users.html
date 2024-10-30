@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block main %}
-<h3>All algrant users</h3>
+<h3>All Algrant users</h3>
 {% if all_users %}
     {% for this_user in all_users %}
     <a href="{% url 'user_profile' username=this_user.username %}">{{this_user.username}}</a>

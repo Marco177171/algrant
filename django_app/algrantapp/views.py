@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
-from django.db.models import Q
+from django.db.models import Q, Max
 from pywebpush import webpush, WebPushException # push notifications
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -351,7 +351,7 @@ def save_push_subscription(request):
 
 @login_required
 def my_conversations(request):
-    conversations = Conversation.objects.filter(participants=request.user)
+    conversations = Conversation.objects.filter(participants=request.user).annotate(latest_message_date=Max('message__timestamp')).order_by('-latest_message_date') 
     context = {
         'conversations': conversations
     }
