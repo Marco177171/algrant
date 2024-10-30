@@ -1,0 +1,33 @@
+{% extends './base.html' %}
+
+{% block main %}
+<h3>Support the project</h3>
+<p>
+Algrant is an algorithm free social network.
+It refuses the usage of AI and algorithms for commercial and political purposes, as well as aiming to deliver a service based on making people meet in real life.
+Algrant users will only receive contents in cronological order, and only the contents they expressively want to see.
+This means they will never get contents that were mixed and ordered by an algorithm meant to maximize sales or manipulate opinions.
+In order to maintain itself, of course, Algrant will need sponsorships. Those who decide to sponsor the project have to keep in mind this fact:
+</p>
+<h5>No targeting in this network</h5>
+<p>
+If you wish to sponsor the project, know that we won't use any kind of data to target specific people.
+Your sponsorship appears on the page in random order with the others, and it doesn't appear more or less to any user on the base of his/her position, age, cultural level or ideology.
+</p>
+<h5>Having that said:</h5>
+<p>If you find value in what we're doing, and you want to appear among our supporters, get in touch with us.</p>
+<a href="{% url 'user_profile' username='marco' %}">Add and text Marco, Algrant's admin</a>
+
+{% endblock %}
+
+{% block main_bottom %}
+<form action="{% url 'search_results' %}" method="post">
+    {% csrf_token %}
+    <input class="search" type="text" name="search_text" placeholder="Search posts and people" required>
+</form>
+{% endblock %}
+
+{% block explorer %}
+<a href="{% url 'index' %}">Index</a>
+<a href="{% url 'all_users' %}">People</a>
+{% endblock %}
