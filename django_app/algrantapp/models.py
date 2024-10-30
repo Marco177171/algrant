@@ -41,6 +41,8 @@ class PushSubscription(models.Model):
     expiration_time = models.DateTimeField(null=True, blank=True)
     p256dh = models.TextField()
     auth = models.TextField()
+    def __str__(self):
+        return self.user.username
 
 class Conversation(models.Model):
     admin_id = models.IntegerField()
