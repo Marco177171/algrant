@@ -1,7 +1,6 @@
 {% extends './base.html' %}
 
 {% block main %}
-<div id="chatContainer">
     {% if messages %}
         {% for message in messages %}
             {% if message.sender == request.user %}
@@ -25,11 +24,11 @@
                 <p>{{message.content}}</p>
             {% endif %}
         {% endfor %}
+        <div id="scrollHere"></div>
     {% else %}
     <h3>No messages yet</h3>
     <p>You can start writing or add people to the chat from <a href="{% url 'chat_settings' conversation_id=conversation.id %}">chat settings</a></p>
     {% endif %}
-</div>
 {% endblock %}
 
 {% block main_bottom %}
@@ -44,9 +43,12 @@
 <a href="{% url 'chat_settings' conversation_id=conversation.id %}">Chat settings</a>
 {% endblock %}
 
+{% block javascript %}
 <script>
-    const chatContainer = document.getElementById("chatContainer");
-    function scrollToBottom() {
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
+    scrollHere = document.getElementById('scrollHere').scrollHeight;
+    main = document.getElementById('main');
+    console.log('main scrollTop: ', main.scrollTop)
+    console.log('scrollHere scrollTop: ', scrollHere.scrollTop)
+    main.scrollTop = main.scrollHeight;
 </script>
+{% endblock %}
