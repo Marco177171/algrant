@@ -1,9 +1,10 @@
 {% extends './conversation_base.html' %}
 
-{% block main %}
-<h6>{{conversation.conversation_name}}/Settings</h6>
-<div class="divider"></div>
+{% block title %}
+    <p>{{conversation.conversation_name}} settings</p>
+{% endblock %}
 
+{% block main %}
 <!-- ADD PARTICIPANTS TO CONVERSATION -->
     {% if conversation.admin_id == request.user.id %}
     <h3>Admin dashboard</h3>

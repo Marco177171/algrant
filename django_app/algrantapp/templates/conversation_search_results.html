@@ -1,7 +1,11 @@
 {% extends './base.html' %}
 
+{% block title %}
+    <p>Chat search</p>
+{% endblock %}
+
 {% block main %}
-    <h6>algrant search</h6>
+    <h6>Algrant search</h6>
     <div class="divider"></div>
     <h3>results for "{{search_text}}"</h3>
     {% if conversations %}

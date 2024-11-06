@@ -1,5 +1,9 @@
 {% extends './base.html' %}
 
+{% block title %}
+<p>Algrant people finder</p>
+{% endblock %}
+
 {% block sidebar %}
     {% if my_friends_list %}
     <ul>
@@ -15,7 +19,7 @@
 {% endblock %}
 
 {% block main %}
-<h3>All algrant users</h3>
+<h3>All Algrant users</h3>
 {% if all_users %}
     {% for this_user in all_users %}
     <a href="{% url 'user_profile' username=this_user.username %}">{{this_user.username}}</a>

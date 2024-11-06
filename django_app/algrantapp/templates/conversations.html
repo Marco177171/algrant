@@ -1,5 +1,9 @@
 {% extends './base.html' %}
 
+{% block title %}
+    <p>Algrant chats</p>
+{% endblock %}
+
 {% block main %}
     <h6>conversations</h6>
     <form action="{% url 'new_conversation' %}" method="post">
