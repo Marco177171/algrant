@@ -139,7 +139,6 @@
                         window.alert('Push notifications activated');
                     } else {
                         console.log('Failed to send subscription to server:', response.statusText);
-                        window.alert('Error: push activation failed');
                     }
                 })
                 .catch(function(error) {
@@ -148,6 +147,7 @@
                 });
             }).catch(function(error) {
                 console.error('Error during subscription:', error);
+                console.log(error.body);
                 window.alert('Error during subscription');
             });
         });
