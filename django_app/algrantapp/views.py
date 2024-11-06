@@ -320,28 +320,21 @@ def save_push_subscription(request):
     if request.method == 'POST':
         try:
             subscription_data = json.loads(request.body)
-            sub = get_object_or_404(PushSubscription, user=request.user)
-            if sub:
-                sub.p256dh = subscription_data['keys']['p256dh']
-                sub.auth = subscription_data['keys']['auth']
-                sub.save()
+            subscription, created = PushSubscription.objects.get_or_create(
+                user=request.user,
+                endpoint=subscription_data['endpoint'],
+                defaults={
+                    'p256dh': subscription_data['keys']['p256dh'],
+                    'auth': subscription_data['keys']['auth']
+                }
+            )
+            if created:
+                print('LOG: Subscription created')
             else:
-                PushSubscription.objects.create(
-                    user = request.user,
-                    p256dh = subscription_data['keys']['p256dh'],
-                    auth = subscription_data['keys']['auth'],
-                )
-            # subscription, created = PushSubscription.objects.get_or_create(
-            #     user=request.user,
-            #     endpoint=subscription_data['endpoint'],
-            #     defaults={
-            #         'p256dh': subscription_data['keys']['p256dh'],
-            #         'auth': subscription_data['keys']['auth']
-            #     }
-            # )
-            # if created:
-            #     print('LOG: Subscription created')
-            # else:
+                print('LOG: Subscription already exists, updating')
+                subscription.p256dh = subscription_data['keys']['p256dh']
+                subscription.auth = subscription_data['keys']['auth']
+                subscription.save()
             return JsonResponse({'status': 'Subscription saved successfully'})
         except json.JSONDecodeError as e:
             print(f"JSON decode error: {str(e)}")
