@@ -36,3 +36,6 @@ django_app/algrant/settings.py
 
 # databases if present
 django_app/db.sqlite3
+
+# static files from STATIC_ROOT
+django_app/staticfiles
