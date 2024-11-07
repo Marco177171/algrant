@@ -18,6 +18,8 @@ Including another URLconf
 from django.urls import path
 from . import views
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -63,4 +65,4 @@ urlpatterns = [
     path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service-worker.js'),
     # SUPPORT ALGRANT
     path('support_algrant', views.support_algrant, name='support_algrant'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
