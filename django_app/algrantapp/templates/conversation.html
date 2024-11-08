@@ -5,30 +5,32 @@
 {% endblock %}
 
 {% block main %}
-    {% if messages %}
-        {% for message in messages %}
-            {% if message.sender == request.user %}
-                <div class="divider"></div>
-                <div style="text-align: right;">
+    <div id="message-list">
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.sender == request.user %}
+                    <div class="divider"></div>
+                    <div style="text-align: right;">
+                        <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
+                        <span>{{message.timestamp}}</span>
+                        <p>{{message.content}}</p>
+                        <span>message moves:</span>
+                        <form action="{% url 'delete_message' %}" id="delete-message-form-{{ message.id }}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="message_id" value="{{ message.id }}">
+                            <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+                            <a href="#" onclick="document.getElementById('delete-message-form-{{ message.id }}').submit(); return false;">Delete</a>
+                        </form>
+                    </div>
+                {% else %}
+                    <div class="divider"></div>
                     <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
                     <span>{{message.timestamp}}</span>
                     <p>{{message.content}}</p>
-                    <span>message moves:</span>
-                    <form action="{% url 'delete_message' %}" id="delete-message-form-{{ message.id }}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="message_id" value="{{ message.id }}">
-                        <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
-                        <a href="#" onclick="document.getElementById('delete-message-form-{{ message.id }}').submit(); return false;">Delete</a>
-                    </form>
-                </div>
-            {% else %}
-                <div class="divider"></div>
-                <a href="{% url 'user_profile' username=message.sender.username %}">{{message.sender.username}}</a>
-                <span>{{message.timestamp}}</span>
-                <p>{{message.content}}</p>
-            {% endif %}
-        {% endfor %}
-    {% else %}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+    </div>
     <h3>No messages yet</h3>
     <p>You can start writing or add people to the chat from <a href="{% url 'chat_settings' conversation_id=conversation.id %}">chat settings</a></p>
     {% endif %}
@@ -50,5 +52,23 @@
 <script>
     main = document.getElementById('main');
     main.scrollTop = main.scrollHeight;
+
+    const conversationId = '{{conversation.id}}';
+    const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${conversationId}/`);
+
+    socket.onmessage = function(event) {
+        console.log("onmessage triggered");
+        const data = JSON.parse(event.data);
+        console.log("DATA received. User: " + data.user + " | Message : " + data.message);
+        const messageList = document.getElementById('message-list');
+        const newMessage = document.createElement('li');
+        newMessage.textContent = `${data.user}: ${data.message_text}`;
+        messageList.appendChild(newMessage);
+        main.scrollTop = main.scrollHeight;
+    };
+
+    socket.onclose = function(event) {
+        console.error('WebSocket closed unexpectedly');
+    };
 </script>
 {% endblock %}
