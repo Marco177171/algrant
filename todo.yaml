@@ -18,8 +18,9 @@ parametrizzazione:
 
 push_notifications:
   funzione: far squillare i telefoni
-  error_handler: get to create notification subscription in db when user grants permission
-  activation notification: send dummy notification if user activates successfully
+  evitare duplicati: prima di attivare una nuova sottoscrizione, controllare che lo user non ne abbia già 
+  # error_handler: get to create notification subscription in db when user grants permission
+  # activation notification: send dummy notification if user activates successfully
 
 Password management:
   # accettare ogni tipo di password: eliminare restrizioni

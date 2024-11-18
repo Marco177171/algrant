@@ -1,5 +1,6 @@
 import os
 import json
+from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django import forms
@@ -464,7 +465,8 @@ def leave_conversation(request):
 @login_required
 def new_message(request, conversation_id):
     if request.method == "POST":
-        message_text = request.POST.get("message_text", "")
+        data = json.loads(request.body)  # Parse the JSON data
+        message_text = data.get("message_text", "")
         destination_conversation = get_object_or_404(Conversation, id=conversation_id)
         # Create the new message
         Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
@@ -483,6 +485,7 @@ def new_message(request, conversation_id):
         for subscription in subscriptions:
             send_push_notification(subscription, "you have a new message on Algrant")
         # Return a JSON response instead of a redirect
+        # return redirect(conversation, conversation_id)
         return JsonResponse({"status": "success", "message": "Message sent successfully"})
     else:
         context = {

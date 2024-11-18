@@ -22,9 +22,6 @@ todo.yaml
 vapid_private.pem
 vapid_public.pem
 
-# makefiles
-Makefile
-
 # caches and migration files
 django_app/algrant/__pycache__/*
 django_app/algrantapp/__pycache__/*
