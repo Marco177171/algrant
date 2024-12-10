@@ -1,6 +1,8 @@
 services:
   algrant_django:
     container_name: algrant_django
+    depends_on:
+      - algrant_redis
     build: ./django_app
     ports:
       - 8002:8000
@@ -9,6 +11,14 @@ services:
     networks:
       - algrantNet
     env_file: .env
+    restart: always
+  algrant_redis:
+    container_name: algrant_redis
+    image: redis:alpine
+    ports:
+      - "6300:6379"
+    networks:
+      - algrantNet
     restart: always
 
 networks:

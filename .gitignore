@@ -22,9 +22,6 @@ todo.yaml
 vapid_private.pem
 vapid_public.pem
 
-# makefiles
-Makefile
-
 # caches and migration files
 django_app/algrant/__pycache__/*
 django_app/algrantapp/__pycache__/*
@@ -36,3 +33,6 @@ django_app/algrant/settings.py
 
 # databases if present
 django_app/db.sqlite3
+
+# static files from STATIC_ROOT
+django_app/staticfiles

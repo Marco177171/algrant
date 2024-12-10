@@ -1,5 +1,6 @@
 import os
 import json
+from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django import forms
@@ -12,6 +13,10 @@ from pywebpush import webpush, WebPushException # push notifications
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.templatetags.static import static
+
+# asgi and websockets related:
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 # Account Management
 
@@ -436,39 +441,57 @@ def leave_conversation(request):
     }
     return render(request, 'message.html', context)
 
+# @login_required
+# def new_message(request, conversation_id):
+#     message_text = request.POST.get("message_text", "")
+#     destination_conversation = get_object_or_404(Conversation, id=conversation_id)
+#     Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
+#     # Broadcast the new message to the WebSocket room group
+#     channel_layer = get_channel_layer()
+#     async_to_sync(channel_layer.group_send)(
+#         f"chat_{conversation_id}",
+#         {
+#             'type': 'chat_message',
+#             'message': message_text,
+#             'user': request.user.username,
+#         }
+#     )
+#     # PUSH NOTIFICATIONS
+#     subscriptions = PushSubscription.objects.filter(user_id__in=destination_conversation.participants.exclude(id=request.user.id).values_list('id', flat=True))
+#     for subscription in subscriptions:
+#         send_push_notification(subscription, "you have a new message on Algrant")
+#     return redirect(conversation, conversation_id)
+
 @login_required
 def new_message(request, conversation_id):
-    message_text = request.POST.get("message_text", "")
-    destination_conversation = get_object_or_404(Conversation, id=conversation_id)
-    Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
-    # PUSH NOTIFICATIONS
-    subscriptions = PushSubscription.objects.filter(user_id__in=destination_conversation.participants.exclude(id=request.user.id).values_list('id', flat=True))
-    # payload = json.dumps({
-    #     'title': 'New message on Algrant',
-    #     'body': f"{request.user.username}: {message_text}",
-    #     'icon': '{% url static  %}'  # Personalizza l'icona se necessario
-    # })
-    for subscription in subscriptions:
-        send_push_notification(subscription, "you have a new message on Algrant")
-    # for subscription in subscriptions:
-        # subscription_info = {
-        #     'endpoint': subscription.endpoint,
-        #     'keys': {
-        #         'p256dh': subscription.p256dh,
-        #         'auth': subscription.auth
-        #     }
-        # }
-        # send_push_notification(subscription_info, payload)
-    # Send push notifications to participants
-    # participants = destination_conversation.participants.exclude(id=request.user.id)
-    # subscriptions = PushSubscription.objects.filter(user__in=participants)
-    # for subscription in subscriptions:
-    #     print(f"Subscription endpoint: {subscription.endpoint}")
-    #     print(f"Subscription p256dh: {subscription.p256dh}")
-    #     print(f"Subscription auth: {subscription.auth}")
-    #     send_push_notification(subscription, message_text)
-    return redirect(conversation, conversation_id)
-    # return JsonResponse({"status": "message created"})
+    if request.method == "POST":
+        data = json.loads(request.body)  # Parse the JSON data
+        message_text = data.get("message_text", "")
+        destination_conversation = get_object_or_404(Conversation, id=conversation_id)
+        # Create the new message
+        Message.objects.create(sender=request.user, conversation=destination_conversation, content=message_text)
+        # Broadcast the new message to the WebSocket room group
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"chat_{conversation_id}",
+            {
+                'type': 'chat_message',
+                'message': message_text,
+                'user': request.user.username,
+            }
+        )
+        # Send push notifications
+        subscriptions = PushSubscription.objects.filter(user_id__in=destination_conversation.participants.exclude(id=request.user.id).values_list('id', flat=True))
+        for subscription in subscriptions:
+            send_push_notification(subscription, "you have a new message on Algrant")
+        # Return a JSON response instead of a redirect
+        # return redirect(conversation, conversation_id)
+        return JsonResponse({"status": "success", "message": "Message sent successfully"})
+    else:
+        context = {
+            'message': 'Error: could not send your message.'
+        }
+        return render(request, 'message.html', context)
 
 @login_required
 def delete_message(request):
