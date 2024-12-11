@@ -1,6 +1,7 @@
 NAME=AlgrantApp
 
 $(NAME):
+	./django_app/manage.py collectstatic
 	./django_app/manage.py makemigrations
 	./django_app/manage.py migrate --run-syncdb
 	# ./django_app/manage.py createsuperuser --no-input

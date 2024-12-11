@@ -40,11 +40,6 @@
 	src: url(../fonts/Urbanist/Urbanist-Light.ttf);
 }
 
-@font-face {
-	font-family: lane;
-	src: url(../fonts/lane/LANENAR_.ttf);
-}
-
 body {
 	background-color: var(--g2);
 }
