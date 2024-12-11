@@ -53,7 +53,9 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
+<script src="{% static 'javascript/main.js' %}"></script>
+<!-- <script>
+	console.log('index script loaded')
 	document.addEventListener('DOMContentLoaded', function() {
 		const enablePushNotificationsLink = document.getElementById('enable-push-notifications');
 		if (enablePushNotificationsLink) {
@@ -128,7 +130,7 @@
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
-						'X-CSRFToken': csrftoken  // Ensure CSRF token is properly set
+						'X-CSRFToken': csrftoken // Ensure CSRF token is properly set
 					},
 					body: JSON.stringify(subscription)
 				})
@@ -177,5 +179,5 @@
 	}
 	
 	const csrftoken = getCookie('csrftoken');
-</script>
+</script> -->
 {% endblock %}

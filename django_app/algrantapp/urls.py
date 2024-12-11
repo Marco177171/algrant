@@ -65,4 +65,4 @@ urlpatterns = [
     path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service-worker.js'),
     # SUPPORT ALGRANT
     path('support_algrant', views.support_algrant, name='support_algrant'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) # these are static files

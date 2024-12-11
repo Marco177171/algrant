@@ -18,6 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from algrantapp.views import register, profile
+# static files
+from django.urls import re_path
+from django.views.static import serve
+from django.conf import settings
 
 urlpatterns = [
     path('', include('algrantapp.urls')),
@@ -27,4 +31,6 @@ urlpatterns = [
     path("accounts/profile/", profile, name="profile"),
     # admin
     path('admin/', admin.site.urls),
+    # serve  static files and javascript files
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]

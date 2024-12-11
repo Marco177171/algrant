@@ -9,6 +9,9 @@ chat:
   # admin_dashboard: url + view -> add_user_to_chat, delete_chat, remove_user_from_chat
   # participant_dashboard: url + view -> leave_chat
 
+instant messaging:
+  redis cointainer hardening: password
+
 comments:
   # delete_my_comment:
 
@@ -24,4 +27,3 @@ push_notifications:
 
 Password management:
   # accettare ogni tipo di password: eliminare restrizioni
-  

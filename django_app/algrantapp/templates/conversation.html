@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load static %}
 
 {% block title %}
 	<p>{{conversation.conversation_name}}</p>
@@ -51,57 +52,9 @@
 
 {% block javascript %}
 <script>
-	function sendMessage(event) {
-		// Prevent the link's default navigation behavior
-		event.preventDefault();
-		const messageInput = document.getElementById('message_input');
-		const messageText = messageInput.value;
-		// console.log(messageText);
-		fetch('/new_message/{{conversation.id}}', {
-			method: 'POST',
-			headers: {
-				'X-CSRFToken': '{{ csrf_token }}',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ 'message_text': messageText })
-		})
-		.then(messageInput.value = null)
-		.then(response => response.json())
-		.catch(error => console.error('Error:', error));
-	}
-	// scroll to bottom on load
-	main = document.getElementById('main');
-	main.scrollTop = main.scrollHeight;
-	// open websocket
-	const conversationId = '{{conversation.id}}';
-	const socket = new WebSocket(`ws://${window.location.host}/ws/chat/${conversationId}/`);
-	
-	socket.onmessage = function(event) {
-		const data = JSON.parse(event.data);
-		// console.log("DATA received. User: " + data.user + " | Message : " + data.message);
-		const messageList = document.getElementById('message-list');
-		
-		const dividerElement = document.createElement('div');
-		dividerElement.className = 'divider';
-		const newMessageSender = document.createElement('a');
-		const newMessageTimestamp = document.createElement('span');
-		const newMessageContent = document.createElement('p');
-		
-		newMessageSender.href = `/user_profile/${data.user}`;
-		newMessageSender.textContent = `${data.user}`;
-		newMessageTimestamp.textContent = 'just now';
-		newMessageContent.textContent = `${data.message}`;
-		
-		messageList.appendChild(dividerElement);
-		messageList.appendChild(newMessageSender);
-		messageList.appendChild(newMessageTimestamp);
-		messageList.appendChild(newMessageContent);
-		
-		main.scrollTop = main.scrollHeight;
-	};
-
-	socket.onclose = function(event) {
-		console.error('WebSocket closed unexpectedly');
-	};
+	let conversation_id = '{{conversation.id}}';
+	let csrf_token = '{{csrf_token}}';
+	let request_user = '{{request.user}}';
 </script>
+<script type="text/javascript" src="{% static 'javascript/messenger.js' %}"></script>
 {% endblock %}
