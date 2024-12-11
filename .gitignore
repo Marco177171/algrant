@@ -1,6 +1,8 @@
 # virtual env if present
 venv
-require.txt
+
+# local Makefile
+Makefile
 
 # env vars
 .env

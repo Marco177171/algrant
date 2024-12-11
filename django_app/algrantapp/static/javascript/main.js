@@ -5,7 +5,7 @@ window.addEventListener('load', (event) => {
     if (navigator.serviceWorker) {
         console.log('Service worker can be registered. Calling service worker...');
         navigator.serviceWorker
-        .register('service-worker.js', {scope: '/'})
+        .register('/service-worker.js', {scope: '/'})
         .then(console.log('Service worker registered'))
         .catch(err => console.error(`Erroro during service worker's registration: ${err}`))
     }
