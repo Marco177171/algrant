@@ -1,52 +1,53 @@
-self.addEventListener('push', function(event) {
-	console.log('Push event received:', event);
-	try {
-		const data = event.data.json();
-		console.log('Push data:', data);
-		const options = {
-			body: data.body,
-			icon: data.icon,
-		};
-		event.waitUntil(
-			self.registration.showNotification(data.title, options)
-		);
-	} catch (error) {
-		console.error('Error in push event:', error);
-	}
-});
+let cacheName = 'Algrant_0.2'
 
-self.addEventListener('notificationclick', function(event) {
-	// Define a URL to open when the notification is clicked
-	const targetUrl = '/my_conversations';  // Adjust based on your app's structure
-	event.notification.close(); // Close the notification
+const cachedAssets = [
+	// javascript
+	'/static/javascript/main.js',
+	'/static/javascript/messenger.js',
+	'/static/webmanifest/algrant.webmanifest',
+    // css
+	'/static/css/CarbonDesignSystem.css',
+    // pics anf fonts
+	'/static/icons/PulsarBlackBorder.png',
+	'/static/fonts/ChakraPetch/ChakraPetch-Light.ttf',
+	'/static/fonts/Urbanist/Urbanist-Light.ttf',
+];
 
-	// Focus on the existing window if it's already open, or open a new one
+self.addEventListener('install', (event) => {
 	event.waitUntil(
-		clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
-			for (var i = 0; i < clientList.length; i++) {
-				var client = clientList[i];
-				if (client.url === targetUrl && 'focus' in client) {
-					return client.focus();
-				}
-			}
-			if (clients.openWindow) {
-				return clients.openWindow(targetUrl);
-			}
+		caches.open(cacheName)
+		.then(cache => {
+			console.log('Service worker: caching files...');
+			cache.addAll(cachedAssets);
 		})
-	);
+		.catch(err => console.error(`Error while caching files: ${err}`))
+	)
+})
+
+// call activation
+self.addEventListener('activate', (event) => {
+    console.log('Service Worker: Activated');
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cache) => {
+                    console.log(`Cycling caches. Cache: ${cache}`);
+                    if (cache !== cacheName) {
+                        console.log('Service Worker: Clearing old cache');
+                        return caches.delete(cache);
+                    }
+                })
+            );
+        })
+    );
+    self.clients.claim(); // Immediately take control of all pages
 });
 
-self.addEventListener('install', function(event) {
-	console.log('Service Worker installing.');
-	// Perform install steps
-});
-
-self.addEventListener('activate', function(event) {
-	console.log('Service Worker activating.');
-	// Perform activate steps
-});
-
-self.addEventListener('fetch', function(event) {
-	console.log('Fetching:', event.request.url);
-	// Perform fetch steps
+// // call fetch
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });

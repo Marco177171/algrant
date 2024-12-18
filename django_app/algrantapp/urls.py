@@ -61,8 +61,8 @@ urlpatterns = [
     # USER INTERFACE
     path('message', views.message, name='message'), # get a message when something happens
     path('search_results', views.search_results, name='search_results'),
-    # JAVASCRIPT
-    path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service-worker.js'),
     # SUPPORT ALGRANT
     path('support_algrant', views.support_algrant, name='support_algrant'),
+    # JAVASCRIPT
+    path('service-worker.js', (TemplateView.as_view(template_name="service-worker.js", content_type='application/javascript', )), name='service-worker.js'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) # these are static files
